@@ -32,6 +32,7 @@ dependencies:
     sdk: flutter
 
   google_fonts: ^6.1.0
+  audioplayers: ^6.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
@@ -59,7 +60,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/tinnitus_bg2.png
+    - assets/images/
+    - assets/audio/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

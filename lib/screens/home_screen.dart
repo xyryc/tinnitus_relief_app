@@ -203,60 +203,88 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    //final isTablet= size=>600;
+
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/tinnitus_bg2.png'),
-            fit: BoxFit.cover,
+            image: AssetImage('assets/images/tinnitus_bg.png'),
+            fit: BoxFit.cover, // Adjust how the image fits
           ),
         ),
-        child: Container(
-          // Semi-transparent overlay for better text visibility
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                const Color(0xFF1a4d5e).withOpacity(0.3),
-                const Color(0xFF2d6a7f).withOpacity(0.5),
-                const Color(0xFF4a8ba8).withOpacity(0.3),
-              ],
+       child: Stack(
+          children: [
+            // 1️⃣ Background image
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/tinnitus_bg.png',
+                fit: BoxFit.cover,
+              ),
             ),
-          ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                // Header
-                _buildHeader(),
 
-                // Control buttons (continuous/timer)
-                _buildControlButtons(),
+            // 2️⃣ Top decorative vector
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Image.asset(
+                "assets/images/top_vector.png",
+                height: size.height * 0.18,
+                fit: BoxFit.cover,
+              ),
+            ),
 
-                const SizedBox(height: 20),
-
-                // Main content: Track list and volume
-                Expanded(
-                  child: Row(
-                    children: [
-                      // Track list
-                      Expanded(
-                        child: _buildTrackList(),
-                      ),
-
-                      // Volume bar
-                      _buildVolumeBar(),
+            // 3️⃣ Background gradients (BEHIND content)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.blue.withValues(alpha: 0.50),
+                      Colors.blue.withValues(alpha: 0.25),
+                      Colors.blue.withValues(alpha: 0.50),
                     ],
                   ),
                 ),
-
-                // Settings icon at bottom
-                _buildSettingsButton(),
-
-                const SizedBox(height: 20),
-              ],
+              ),
             ),
-          ),
+
+           Column(
+                children: [
+                  SizedBox(height: size.height * 0.02),
+                  _buildHeader(),
+                  SizedBox(height: size.height * 0.05),
+                  _buildControlButtons(),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(child: _buildTrackList()),
+
+                      ],
+                    ),
+                  ),
+                  _buildSettingsButton(),
+                  const SizedBox(height: 20),
+                ],
+              ),
+           _buildVolumeBar(),
+           Positioned(
+              right: 18,
+              top: 85,
+              child: Text(
+                'earvana',
+                style: GoogleFonts.roboto(
+                  fontSize: 14,
+                  color: Colors.white,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -303,14 +331,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
 
           // Website
-          Text(
-            'earvana.org',
-            style: GoogleFonts.roboto(
-              fontSize: 14,
-              color: const Color(0xFF64B5F6),
-              letterSpacing: 1.2,
-            ),
-          ),
+
         ],
       ),
     );
@@ -358,7 +379,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _buildTrackList() {
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      padding: const EdgeInsets.only(left:18,right: 18),
       itemCount: _tracks.length,
       itemBuilder: (context, index) {
         bool isSelected = _selectedTrackIndex == index;
@@ -390,6 +411,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         return GestureDetector(
           onTap: () => _togglePlayPause(index),
           child: Container(
+
             margin: const EdgeInsets.only(bottom: 8.0),
             padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
             decoration: BoxDecoration(

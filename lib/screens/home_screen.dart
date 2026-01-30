@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 
+import '../widgets/buildheader.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -256,9 +258,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
            Column(
                 children: [
                   SizedBox(height: size.height * 0.02),
-                  _buildHeader(),
+
+                  Buildheader(),
+
                   SizedBox(height: size.height * 0.05),
+
                   _buildControlButtons(),
+
                   Expanded(
                     child: Row(
                       children: [
@@ -267,7 +273,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
+
                   _buildSettingsButton(),
+
                   const SizedBox(height: 20),
                 ],
               ),
@@ -276,8 +284,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               right: 18,
               top: 85,
               child: Text(
-                'earvana',
-                style: GoogleFonts.roboto(
+                'earvana.org',
+                style: GoogleFonts.orbitron(
                   fontSize: 14,
                   color: Colors.white,
                   letterSpacing: 1.2,
@@ -290,52 +298,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // App title
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              RichText(
-                text: TextSpan(
-                  style: GoogleFonts.orbitron(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [
-                    const TextSpan(
-                      text: 'tinnitus',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    TextSpan(
-                      text: 'relief',
-                      style: TextStyle(color: const Color(0xFF64B5F6)),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'professional masking solution',
-                style: GoogleFonts.roboto(
-                  fontSize: 11,
-                  color: Colors.white70,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            ],
-          ),
 
-          // Website
-
-        ],
-      ),
-    );
-  }
 
   Widget _buildControlButtons() {
     return Padding(

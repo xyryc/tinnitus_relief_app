@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 
-import '../widgets/buildheader.dart';
+import '../widgets/home_screen_header.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -259,17 +259,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 children: [
                   SizedBox(height: size.height * 0.02),
 
-                  Buildheader(),
+                  HomeScreenHeader(),
 
                   SizedBox(height: size.height * 0.05),
 
                   _buildControlButtons(),
 
+                  SizedBox(height: 16),
+
                   Expanded(
                     child: Row(
                       children: [
                         Expanded(child: _buildTrackList()),
-
                       ],
                     ),
                   ),
@@ -280,16 +281,48 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ],
               ),
            _buildVolumeBar(),
+
            Positioned(
               right: 18,
-              top: 85,
-              child: Text(
-                'earvana.org',
-                style: GoogleFonts.orbitron(
-                  fontSize: 14,
-                  color: Colors.white,
-                  letterSpacing: 1.2,
-                ),
+              top: 110,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: const [
+                  Text(
+                    'earvana.',
+                    style: TextStyle(
+                      fontFamily: "Kallisto",
+                      fontSize: 20,
+                      color: Colors.white,
+                      letterSpacing: 1.2,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(0, 1),
+                          blurRadius: 4,
+                          color: Colors.black45,
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Text(
+                      'org',
+                      style:  TextStyle(
+                        fontFamily: "Kallisto",
+                        fontWeight: FontWeight.w200,
+                        fontSize: 14,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(0, 1),
+                            blurRadius: 4,
+                            color: Colors.black45,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
               ),
             ),
           ],
@@ -302,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   Widget _buildControlButtons() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      padding: const EdgeInsets.symmetric(horizontal: 36.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -313,9 +346,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             },
             child: Text(
               'continuous',
-              style: GoogleFonts.roboto(
+              style: TextStyle(
+                fontFamily: "Kallisto",
+                fontWeight: !_isTimerMode ? FontWeight.w900 : FontWeight.w300,
                 fontSize: 16,
-                color: !_isTimerMode ? Colors.white : Colors.white54,
+                color: !_isTimerMode ? Colors.lightGreenAccent : Colors.white,
                 letterSpacing: 1.5,
               ),
             ),
@@ -328,10 +363,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             onTap: _toggleTimerMode,
             child: Text(
               'timer',
-              style: GoogleFonts.roboto(
+              style: TextStyle(
+                fontFamily: "Kallisto",
                 fontSize: 16,
-                color: _isTimerMode ? const Color(0xFF7FFF00) : Colors.white54,
+                fontWeight: _isTimerMode ? FontWeight.w900 : FontWeight.w300,
                 letterSpacing: 1.5,
+                color: _isTimerMode ? Colors.lightGreenAccent : Colors.white,
               ),
             ),
           ),
@@ -488,7 +525,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         child: IconButton(
           icon: const Icon(
             Icons.settings,
-            color: Color(0xFF64B5F6),
+            color: Color(0xFF54999d),
             size: 32,
           ),
           onPressed: () {

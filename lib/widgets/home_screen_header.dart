@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-class Buildheader extends StatelessWidget {
-  const Buildheader({super.key});
+
+class HomeScreenHeader extends StatelessWidget {
+  const HomeScreenHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,17 +26,19 @@ class Buildheader extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 40,
                         color: Colors.white,
-                        letterSpacing: 2,
+                        letterSpacing: 3,
                         shadows: [
                           Shadow(
                             offset: Offset(0, 1),
-                            blurRadius: 4,
+                            blurRadius: 2,
                             color: Colors.black45,
                           ),
                         ],
                       ),
                     ),
+
                     SizedBox(width: 4),
+
                     Text(
                       "relief",
                       style: TextStyle(

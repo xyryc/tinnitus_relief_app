@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 
 import '../widgets/home_screen_header.dart';
+import '../widgets/track_list_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -197,12 +198,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _audioPlayer.setVolume(_volume);
   }
 
-  // Format duration
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    return '${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds.remainder(60))}';
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -378,110 +373,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildTrackList() {
-    return ListView.builder(
-      padding: const EdgeInsets.only(left:18,right: 18),
-      itemCount: _tracks.length,
-      itemBuilder: (context, index) {
-        bool isSelected = _selectedTrackIndex == index;
-        bool showAsPlaying = isSelected && _isPlaying;
-        bool showAsPaused = isSelected && _isPaused;
-
-        // Color logic
-        Color textColor;
-        Color iconColor;
-
-        if (_isFirstLaunch) {
-          // All black on first launch
-          textColor = Colors.black87;
-          iconColor = Colors.black54;
-        } else if (showAsPlaying) {
-          // Green when playing
-          textColor = const Color(0xFF7FFF00);
-          iconColor = const Color(0xFF7FFF00);
-        } else if (showAsPaused) {
-          // Yellow when paused (with blink)
-          textColor = const Color(0xFFFFD700);
-          iconColor = const Color(0xFFFFD700);
-        } else {
-          // Gray for unselected
-          textColor = Colors.white70;
-          iconColor = Colors.white54;
-        }
-
-        return GestureDetector(
-          onTap: () => _togglePlayPause(index),
-          child: Container(
-
-            margin: const EdgeInsets.only(bottom: 8.0),
-            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? Colors.white.withOpacity(0.15)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              children: [
-                // Play icon
-                showAsPaused
-                    ? AnimatedBuilder(
-                  animation: _blinkAnimation,
-                  builder: (context, child) {
-                    return Opacity(
-                      opacity: _blinkAnimation.value,
-                      child: Icon(
-                        Icons.play_arrow,
-                        color: iconColor,
-                        size: 24,
-                      ),
-                    );
-                  },
-                )
-                    : Icon(
-                  Icons.play_arrow,
-                  color: iconColor,
-                  size: 24,
-                ),
-
-                const SizedBox(width: 16),
-
-                // Track name
-                Expanded(
-                  child: Text(
-                    _tracks[index]['name']!,
-                    style: GoogleFonts.roboto(
-                      fontSize: 18,
-                      color: textColor,
-                      fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-
-                // Loop icon and timer (only for selected track)
-                if (isSelected && _isPlaying) ...[
-                  Icon(
-                    Icons.loop,
-                    color: Colors.white70,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 16),
-                  if (_isTimerMode)
-                    Text(
-                      _formatDuration(_remainingTime),
-                      style: GoogleFonts.roboto(
-                        fontSize: 18,
-                        color: const Color(0xFF7FFF00),
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                ],
-              ],
-            ),
-          ),
-        );
-      },
+    return TrackListWidget(
+      tracks: _tracks,
+      selectedTrackIndex: _selectedTrackIndex,
+      isPlaying: _isPlaying,
+      isPaused: _isPaused,
+      isFirstLaunch: _isFirstLaunch,
+      isTimerMode: _isTimerMode,
+      remainingTime: _remainingTime,
+      blinkAnimation: _blinkAnimation,
+      onTrackTap: _togglePlayPause,
     );
   }
 

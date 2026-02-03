@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinnitus_relief/screens/home_screen.dart';
 import 'package:tinnitus_relief/screens/signup_screen.dart';
+import 'package:tinnitus_relief/screens/forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -217,11 +218,10 @@ class _LoginScreenState extends State<LoginScreen> {
             alignment: Alignment.centerRight,
             child: TextButton(
               onPressed: () {
-                // Handle forgot password
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Forgot password clicked'),
-                  ),
+                // Navigate to forgot password screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ForgotPasswordScreen()),
                 );
               },
               child: const Text(
@@ -448,3 +448,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+

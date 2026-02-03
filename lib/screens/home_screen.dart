@@ -5,6 +5,7 @@ import 'dart:async';
 
 import '../widgets/home_screen_header.dart';
 import '../widgets/track_list_widget.dart';
+import '../widgets/timer_modal.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   bool _isTimerMode = false;
   final Duration _timerDuration = const Duration(hours: 7);
   Duration _remainingTime = const Duration(hours: 7);
+  double _fadeOutMinutes = 1.5;
   Timer? _timer;
 
   // Volume
@@ -190,6 +192,30 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         _startTimer();
       }
     });
+  }
+
+  // Show timer modal
+  void _showTimerModal() {
+    showDialog(
+      context: context,
+      builder: (context) => TimerModal(
+        initialDuration: _remainingTime,
+        initialFadeOutMinutes: _fadeOutMinutes,
+        onSave: (duration, fadeOut) {
+          setState(() {
+            _remainingTime = duration;
+            _fadeOutMinutes = fadeOut;
+            _isTimerMode = true;
+            if (_isPlaying) {
+              _startTimer();
+            }
+          });
+        },
+        onClose: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    );
   }
 
   // Change volume
@@ -367,7 +393,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           InkWell(
             onTap: () {
               print('DEBUG: Timer button tapped!');
-              _toggleTimerMode();
+              _showTimerModal();
             },
             child: Container(
               padding: EdgeInsets.symmetric(
@@ -467,6 +493,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 }
+
+
+
+
 
 
 

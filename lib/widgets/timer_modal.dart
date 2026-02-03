@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'dart:async';
 
 class TimerModal extends StatefulWidget {
   final Duration initialDuration;
-  final Function(Duration) onDurationChanged;
+  final double initialFadeOutMinutes;
+  final Function(Duration, double) onSave;
   final VoidCallback onClose;
 
   const TimerModal({
     super.key,
     required this.initialDuration,
-    required this.onDurationChanged,
+    required this.initialFadeOutMinutes,
+    required this.onSave,
     required this.onClose,
   });
 
@@ -21,15 +22,15 @@ class TimerModal extends StatefulWidget {
 class _TimerModalState extends State<TimerModal> {
   late int _selectedHours;
   late int _selectedMinutes;
-  late ScrollController _hoursController;
-  late ScrollController _minutesController;
+  late FixedExtentScrollController _hoursController;
+  late FixedExtentScrollController _minutesController;
 
   bool _isAM = true;
   DateTime _currentTime = DateTime.now();
   Timer? _clockTimer;
 
   DateTime? _stopTime;
-  double _fadeOutMinutes = 1.5;
+  late double _fadeOutMinutes;
 
   @override
   void initState() {
@@ -38,13 +39,14 @@ class _TimerModalState extends State<TimerModal> {
     // Initialize duration
     _selectedHours = widget.initialDuration.inHours;
     _selectedMinutes = widget.initialDuration.inMinutes.remainder(60);
+    _fadeOutMinutes = widget.initialFadeOutMinutes;
 
     // Initialize scroll controllers
-    _hoursController = ScrollController(
-      initialScrollOffset: _selectedHours * 60.0,
+    _hoursController = FixedExtentScrollController(
+      initialItem: _selectedHours,
     );
-    _minutesController = ScrollController(
-      initialScrollOffset: _selectedMinutes * 60.0,
+    _minutesController = FixedExtentScrollController(
+      initialItem: _selectedMinutes ~/ 15,
     );
 
     // Update current time every second
@@ -78,13 +80,27 @@ class _TimerModalState extends State<TimerModal> {
   void _incrementStopTime() {
     setState(() {
       _stopTime = _stopTime?.add(const Duration(minutes: 15));
+      // Update duration based on stop time
+      final newDuration = _stopTime!.difference(_currentTime);
+      _selectedHours = newDuration.inHours;
+      _selectedMinutes = newDuration.inMinutes.remainder(60);
     });
   }
 
   void _decrementStopTime() {
     setState(() {
       _stopTime = _stopTime?.subtract(const Duration(minutes: 15));
+      // Update duration based on stop time
+      final newDuration = _stopTime!.difference(_currentTime);
+      _selectedHours = newDuration.inHours;
+      _selectedMinutes = newDuration.inMinutes.remainder(60);
     });
+  }
+
+  void _handleSave() {
+    final duration = Duration(hours: _selectedHours, minutes: _selectedMinutes);
+    widget.onSave(duration, _fadeOutMinutes);
+    widget.onClose();
   }
 
   @override
@@ -93,6 +109,9 @@ class _TimerModalState extends State<TimerModal> {
       backgroundColor: Colors.transparent,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.85,
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.85,
+        ),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -118,52 +137,80 @@ class _TimerModalState extends State<TimerModal> {
         ),
         child: Stack(
           children: [
-            // Main content
-            Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Title
-                  Text(
-                    'TIMER',
-                    style: GoogleFonts.orbitron(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white.withOpacity(0.5),
-                      letterSpacing: 8,
+            // Main content (scrollable)
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Title
+                    Text(
+                      'TIMER',
+                      style: TextStyle(
+                        fontFamily: 'Kallisto',
+                        fontSize: 28,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.white.withOpacity(0.5),
+                        letterSpacing: 8,
+                      ),
                     ),
-                  ),
 
-                  const SizedBox(height: 30),
+                    const SizedBox(height: 20),
 
-                  // Current Time Section
-                  _buildCurrentTimeSection(),
+                    // Current Time Section
+                    _buildCurrentTimeSection(),
 
-                  const SizedBox(height: 30),
+                    const SizedBox(height: 20),
 
-                  // Duration Picker Section
-                  _buildDurationSection(),
+                    // Duration Picker Section
+                    _buildDurationSection(),
 
-                  const SizedBox(height: 30),
+                    const SizedBox(height: 20),
 
-                  // Stop Time Section
-                  _buildStopTimeSection(),
+                    // Stop Time Section
+                    _buildStopTimeSection(),
 
-                  const SizedBox(height: 30),
+                    const SizedBox(height: 20),
 
-                  // Fade Out Section
-                  _buildFadeOutSection(),
+                    // Fade Out Section
+                    _buildFadeOutSection(),
 
-                  const SizedBox(height: 20),
-                ],
+                    const SizedBox(height: 20),
+
+                    // Save Button
+                    ElevatedButton(
+                      onPressed: _handleSave,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF64B5F6),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 14,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'SAVE',
+                        style: TextStyle(
+                          fontFamily: 'Kallisto',
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
             // Close button
             Positioned(
-              top: 16,
-              left: 16,
+              top: 12,
+              left: 12,
               child: GestureDetector(
                 onTap: widget.onClose,
                 child: Container(
@@ -175,7 +222,7 @@ class _TimerModalState extends State<TimerModal> {
                   child: const Icon(
                     Icons.close,
                     color: Colors.white,
-                    size: 24,
+                    size: 20,
                   ),
                 ),
               ),
@@ -191,8 +238,9 @@ class _TimerModalState extends State<TimerModal> {
       children: [
         Text(
           'current time',
-          style: GoogleFonts.roboto(
-            fontSize: 16,
+          style: TextStyle(
+            fontFamily: 'Kallisto',
+            fontSize: 14,
             color: Colors.white70,
             letterSpacing: 2,
           ),
@@ -211,14 +259,15 @@ class _TimerModalState extends State<TimerModal> {
               },
               child: Text(
                 'AM',
-                style: GoogleFonts.roboto(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontFamily: 'Kallisto',
+                  fontSize: 12,
                   color: _isAM ? Colors.white : Colors.white38,
                   letterSpacing: 1,
                 ),
               ),
             ),
-            const SizedBox(width: 100),
+            const SizedBox(width: 80),
             GestureDetector(
               onTap: () {
                 setState(() {
@@ -227,8 +276,9 @@ class _TimerModalState extends State<TimerModal> {
               },
               child: Text(
                 'PM',
-                style: GoogleFonts.roboto(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontFamily: 'Kallisto',
+                  fontSize: 12,
                   color: !_isAM ? const Color(0xFF7FFF00) : Colors.white38,
                   letterSpacing: 1,
                 ),
@@ -237,20 +287,20 @@ class _TimerModalState extends State<TimerModal> {
           ],
         ),
 
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
 
         // Analog Clock
         Container(
-          width: 120,
-          height: 120,
+          width: 100,
+          height: 100,
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.3),
-                blurRadius: 10,
-                spreadRadius: 2,
+                blurRadius: 8,
+                spreadRadius: 1,
               ),
             ],
           ),
@@ -267,13 +317,14 @@ class _TimerModalState extends State<TimerModal> {
       children: [
         Text(
           'duration',
-          style: GoogleFonts.roboto(
-            fontSize: 16,
+          style: TextStyle(
+            fontFamily: 'Kallisto',
+            fontSize: 14,
             color: Colors.white70,
             letterSpacing: 2,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
 
         // Hour and Minute Pickers
         Row(
@@ -284,13 +335,14 @@ class _TimerModalState extends State<TimerModal> {
               children: [
                 Text(
                   'hrs',
-                  style: GoogleFonts.roboto(
-                    fontSize: 12,
+                  style: TextStyle(
+                    fontFamily: 'Kallisto',
+                    fontSize: 11,
                     color: Colors.white54,
                     letterSpacing: 1,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 _buildNumberPicker(
                   controller: _hoursController,
                   maxValue: 23,
@@ -299,55 +351,51 @@ class _TimerModalState extends State<TimerModal> {
                       _selectedHours = value;
                       _calculateStopTime();
                     });
-                    widget.onDurationChanged(
-                      Duration(hours: _selectedHours, minutes: _selectedMinutes),
-                    );
                   },
                 ),
               ],
             ),
 
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
 
             // Colon separator
             Padding(
-              padding: const EdgeInsets.only(top: 24),
+              padding: const EdgeInsets.only(top: 20),
               child: Text(
                 ':',
-                style: GoogleFonts.roboto(
-                  fontSize: 32,
+                style: TextStyle(
+                  fontFamily: 'Kallisto',
+                  fontSize: 28,
                   color: Colors.white70,
                   fontWeight: FontWeight.w300,
                 ),
               ),
             ),
 
-            const SizedBox(width: 16),
+            const SizedBox(width: 12),
 
             // Minutes
             Column(
               children: [
                 Text(
                   'mins',
-                  style: GoogleFonts.roboto(
-                    fontSize: 12,
+                  style: TextStyle(
+                    fontFamily: 'Kallisto',
+                    fontSize: 11,
                     color: Colors.white54,
                     letterSpacing: 1,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 _buildNumberPicker(
                   controller: _minutesController,
-                  maxValue: 59,
+                  maxValue: 45,
                   interval: 15,
                   onChanged: (value) {
                     setState(() {
                       _selectedMinutes = value;
                       _calculateStopTime();
                     });
-                    widget.onDurationChanged(
-                      Duration(hours: _selectedHours, minutes: _selectedMinutes),
-                    );
                   },
                 ),
               ],
@@ -359,17 +407,17 @@ class _TimerModalState extends State<TimerModal> {
   }
 
   Widget _buildNumberPicker({
-    required ScrollController controller,
+    required FixedExtentScrollController controller,
     required int maxValue,
     int interval = 1,
     required Function(int) onChanged,
   }) {
     return Container(
-      height: 180,
-      width: 80,
+      height: 150,
+      width: 70,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: Colors.white.withOpacity(0.1),
           width: 1,
@@ -380,59 +428,46 @@ class _TimerModalState extends State<TimerModal> {
           // Selection highlight
           Center(
             child: Container(
-              height: 60,
+              height: 50,
               decoration: BoxDecoration(
                 color: const Color(0xFF64B5F6).withOpacity(0.2),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(6),
               ),
             ),
           ),
 
           // Scrollable numbers
-          NotificationListener<ScrollNotification>(
-            onNotification: (notification) {
-              if (notification is ScrollEndNotification) {
-                final offset = controller.offset;
-                final index = (offset / 60).round();
-                final targetOffset = index * 60.0;
-                controller.animateTo(
-                  targetOffset,
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeOut,
-                );
-                onChanged(index * interval);
-              }
-              return true;
+          ListWheelScrollView.useDelegate(
+            controller: controller,
+            itemExtent: 50,
+            diameterRatio: 1.5,
+            physics: const FixedExtentScrollPhysics(),
+            onSelectedItemChanged: (index) {
+              onChanged(index * interval);
             },
-            child: ListWheelScrollView.useDelegate(
-              controller: controller,
-              itemExtent: 60,
-              diameterRatio: 1.5,
-              physics: const FixedExtentScrollPhysics(),
-              childDelegate: ListWheelChildBuilderDelegate(
-                builder: (context, index) {
-                  if (index < 0 || index > maxValue ~/ interval) return null;
+            childDelegate: ListWheelChildBuilderDelegate(
+              builder: (context, index) {
+                if (index < 0 || index > maxValue ~/ interval) return null;
 
-                  final value = index * interval;
-                  final scrollOffset = controller.hasClients ? controller.offset : 0;
-                  final itemOffset = (index * 60.0 - scrollOffset).abs();
-                  final isCenter = itemOffset < 30;
+                final value = index * interval;
+                final isSelected = controller.hasClients && 
+                    controller.selectedItem == index;
 
-                  return Center(
-                    child: Text(
-                      value.toString().padLeft(2, '0'),
-                      style: GoogleFonts.roboto(
-                        fontSize: isCenter ? 32 : 24,
-                        fontWeight: isCenter ? FontWeight.w500 : FontWeight.w300,
-                        color: isCenter
-                            ? Colors.white
-                            : Colors.white.withOpacity(0.3),
-                      ),
+                return Center(
+                  child: Text(
+                    value.toString().padLeft(2, '0'),
+                    style: TextStyle(
+                      fontFamily: 'Kallisto',
+                      fontSize: isSelected ? 28 : 20,
+                      fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
+                      color: isSelected
+                          ? Colors.white
+                          : Colors.white.withOpacity(0.3),
                     ),
-                  );
-                },
-                childCount: (maxValue ~/ interval) + 1,
-              ),
+                  ),
+                );
+              },
+              childCount: (maxValue ~/ interval) + 1,
             ),
           ),
         ],
@@ -445,39 +480,14 @@ class _TimerModalState extends State<TimerModal> {
       children: [
         Text(
           'stop time',
-          style: GoogleFonts.roboto(
-            fontSize: 16,
+          style: TextStyle(
+            fontFamily: 'Kallisto',
+            fontSize: 14,
             color: Colors.white70,
             letterSpacing: 2,
           ),
         ),
         const SizedBox(height: 8),
-
-        // AM/PM for stop time
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              _stopTime != null && _stopTime!.hour < 12 ? 'AM' : 'AM',
-              style: GoogleFonts.roboto(
-                fontSize: 14,
-                color: Colors.white38,
-                letterSpacing: 1,
-              ),
-            ),
-            const SizedBox(width: 100),
-            Text(
-              'PM',
-              style: GoogleFonts.roboto(
-                fontSize: 14,
-                color: const Color(0xFF7FFF00),
-                letterSpacing: 1,
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 12),
 
         // Stop time clock with +/- buttons
         Row(
@@ -486,23 +496,25 @@ class _TimerModalState extends State<TimerModal> {
             // Minus button
             IconButton(
               onPressed: _decrementStopTime,
-              icon: const Icon(Icons.remove, color: Colors.white70, size: 24),
+              icon: const Icon(Icons.remove, color: Colors.white70, size: 20),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
             ),
 
-            const SizedBox(width: 16),
+            const SizedBox(width: 8),
 
             // Clock
             Container(
-              width: 120,
-              height: 120,
+              width: 90,
+              height: 90,
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.3),
-                    blurRadius: 10,
-                    spreadRadius: 2,
+                    blurRadius: 8,
+                    spreadRadius: 1,
                   ),
                 ],
               ),
@@ -511,12 +523,14 @@ class _TimerModalState extends State<TimerModal> {
               ),
             ),
 
-            const SizedBox(width: 16),
+            const SizedBox(width: 8),
 
             // Plus button
             IconButton(
               onPressed: _incrementStopTime,
-              icon: const Icon(Icons.add, color: Colors.white70, size: 24),
+              icon: const Icon(Icons.add, color: Colors.white70, size: 20),
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
             ),
           ],
         ),
@@ -529,46 +543,25 @@ class _TimerModalState extends State<TimerModal> {
       children: [
         Text(
           'fade out',
-          style: GoogleFonts.roboto(
-            fontSize: 16,
+          style: TextStyle(
+            fontFamily: 'Kallisto',
+            fontSize: 14,
             color: Colors.white70,
             letterSpacing: 2,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 10),
 
-        // Fade out slider
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Dot indicators
-            ...List.generate(20, (index) {
-              final isActive = index < (_fadeOutMinutes * 10).round();
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 2),
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: isActive
-                      ? const Color(0xFFFFD700)
-                      : Colors.white.withOpacity(0.2),
-                  shape: BoxShape.circle,
-                ),
-              );
-            }),
-
-            const SizedBox(width: 12),
-
-            // Minutes display
-            Text(
-              '${_fadeOutMinutes.toStringAsFixed(1)} min',
-              style: GoogleFonts.roboto(
-                fontSize: 14,
-                color: const Color(0xFFFFD700),
-                letterSpacing: 1,
-              ),
-            ),
-          ],
+        // Minutes display
+        Text(
+          '${_fadeOutMinutes.toStringAsFixed(1)} min',
+          style: TextStyle(
+            fontFamily: 'Kallisto',
+            fontSize: 16,
+            color: const Color(0xFFFFD700),
+            letterSpacing: 1,
+            fontWeight: FontWeight.bold,
+          ),
         ),
 
         const SizedBox(height: 8),
@@ -627,15 +620,16 @@ class ClockPainter extends CustomPainter {
     // Draw hour markers
     for (int i = 1; i <= 12; i++) {
       final angle = (i * 30 - 90) * (3.14159 / 180);
-      final x = center.dx + (radius - 20) * cos(angle);
-      final y = center.dy + (radius - 20) * sin(angle);
+      final x = center.dx + (radius - 15) * _cos(angle);
+      final y = center.dy + (radius - 15) * _sin(angle);
 
       final textPainter = TextPainter(
         text: TextSpan(
           text: i.toString(),
           style: const TextStyle(
+            fontFamily: 'Kallisto',
             color: Colors.black,
-            fontSize: 14,
+            fontSize: 11,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -652,13 +646,13 @@ class ClockPainter extends CustomPainter {
     final hourAngle = ((time.hour % 12) * 30 + time.minute * 0.5 - 90) * (3.14159 / 180);
     final hourPaint = Paint()
       ..color = Colors.black
-      ..strokeWidth = 4
+      ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
     canvas.drawLine(
       center,
       Offset(
-        center.dx + (radius * 0.4) * cos(hourAngle),
-        center.dy + (radius * 0.4) * sin(hourAngle),
+        center.dx + (radius * 0.4) * _cos(hourAngle),
+        center.dy + (radius * 0.4) * _sin(hourAngle),
       ),
       hourPaint,
     );
@@ -667,13 +661,13 @@ class ClockPainter extends CustomPainter {
     final minuteAngle = (time.minute * 6 - 90) * (3.14159 / 180);
     final minutePaint = Paint()
       ..color = Colors.black
-      ..strokeWidth = 3
+      ..strokeWidth = 2
       ..strokeCap = StrokeCap.round;
     canvas.drawLine(
       center,
       Offset(
-        center.dx + (radius * 0.6) * cos(minuteAngle),
-        center.dy + (radius * 0.6) * sin(minuteAngle),
+        center.dx + (radius * 0.6) * _cos(minuteAngle),
+        center.dy + (radius * 0.6) * _sin(minuteAngle),
       ),
       minutePaint,
     );
@@ -682,27 +676,12 @@ class ClockPainter extends CustomPainter {
     final centerDotPaint = Paint()
       ..color = Colors.black
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(center, 5, centerDotPaint);
+    canvas.drawCircle(center, 4, centerDotPaint);
   }
 
-  @override
-  bool shouldRepaint(ClockPainter oldDelegate) {
-    return oldDelegate.time != time;
-  }
-}
-
-// Helper function to use cosine (dart:math)
-double cos(double radians) {
-  return radians.cos();
-}
-
-double sin(double radians) {
-  return radians.sin();
-}
-
-extension on double {
-  double cos() {
-    double x = this;
+  // Helper functions for cos/sin
+  double _cos(double radians) {
+    double x = radians;
     double result = 1.0;
     double term = 1.0;
     for (int i = 1; i < 10; i++) {
@@ -712,8 +691,8 @@ extension on double {
     return result;
   }
 
-  double sin() {
-    double x = this;
+  double _sin(double radians) {
+    double x = radians;
     double result = x;
     double term = x;
     for (int i = 1; i < 10; i++) {
@@ -721,5 +700,10 @@ extension on double {
       result += term;
     }
     return result;
+  }
+
+  @override
+  bool shouldRepaint(ClockPainter oldDelegate) {
+    return oldDelegate.time != time;
   }
 }

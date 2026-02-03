@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TrackListWidget extends StatelessWidget {
   final List<Map<String, String>> tracks;
@@ -113,7 +112,7 @@ class TrackListWidget extends StatelessWidget {
                 ),
 
                 // Loop icon and timer (only for selected track)
-                if (isSelected && isPlaying) ...[
+                if (isSelected && isPlaying) ...[ 
                   Icon(
                     Icons.loop,
                     color: Colors.white70,

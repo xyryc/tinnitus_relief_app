@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:tinnitus_relief/screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -114,38 +113,41 @@ class _LoginScreenState extends State<LoginScreen> {
         // App Title
         RichText(
           textAlign: TextAlign.start,
-          text: TextSpan(
-            style: GoogleFonts.orbitron(
+          text: const TextSpan(
+            style: TextStyle(
+              fontFamily: 'Kallisto',
               fontSize: 42,
               fontWeight: FontWeight.bold,
             ),
             children: [
-              const TextSpan(
+              TextSpan(
                 text: 'tinnitus',
                 style: TextStyle(color: Colors.white),
               ),
               TextSpan(
                 text: 'relief',
-                style: TextStyle(color: const Color(0xFF64B5F6)),
+                style: TextStyle(color: Color(0xFF64B5F6)),
               ),
             ],
           ),
         ),
         const SizedBox(height: 8),
-        Text(
+        const Text(
           'professional masking solution',
-          style: GoogleFonts.roboto(
+          style: TextStyle(
+            fontFamily: 'Kallisto',
             fontSize: 14,
             color: Colors.white70,
             letterSpacing: 1.5,
           ),
         ),
         const SizedBox(height: 4),
-        Text(
+        const Text(
           'earvana.org',
-          style: GoogleFonts.roboto(
+          style: TextStyle(
+            fontFamily: 'Kallisto',
             fontSize: 12,
-            color: const Color(0xFF64B5F6),
+            color: Color(0xFF64B5F6),
             letterSpacing: 1.2,
           ),
         ),
@@ -176,9 +178,10 @@ class _LoginScreenState extends State<LoginScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Welcome text
-          Text(
+          const Text(
             'Welcome Back',
-            style: GoogleFonts.roboto(
+            style: TextStyle(
+              fontFamily: 'Kallisto',
               fontSize: 28,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -186,9 +189,10 @@ class _LoginScreenState extends State<LoginScreen> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
-          Text(
+          const Text(
             'Sign in to continue',
-            style: GoogleFonts.roboto(
+            style: TextStyle(
+              fontFamily: 'Kallisto',
               fontSize: 14,
               color: Colors.white70,
             ),
@@ -219,10 +223,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 );
               },
-              child: Text(
+              child: const Text(
                 'Forgot Password?',
-                style: GoogleFonts.roboto(
-                  color: const Color(0xFF64B5F6),
+                style: TextStyle(
+                  fontFamily: 'Kallisto',
+                  color: Color(0xFF64B5F6),
                   fontSize: 14,
                 ),
               ),
@@ -248,10 +253,16 @@ class _LoginScreenState extends State<LoginScreen> {
     return TextFormField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(
+        fontFamily: 'Kallisto',
+        color: Colors.white,
+      ),
       decoration: InputDecoration(
         labelText: 'Email',
-        labelStyle: TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(
+          fontFamily: 'Kallisto',
+          color: Colors.white70,
+        ),
         prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF64B5F6)),
         filled: true,
         fillColor: Colors.white.withOpacity(0.1),
@@ -299,10 +310,16 @@ class _LoginScreenState extends State<LoginScreen> {
     return TextFormField(
       controller: _passwordController,
       obscureText: !_isPasswordVisible,
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(
+        fontFamily: 'Kallisto',
+        color: Colors.white,
+      ),
       decoration: InputDecoration(
         labelText: 'Password',
-        labelStyle: const TextStyle(color: Colors.white70),
+        labelStyle: const TextStyle(
+          fontFamily: 'Kallisto',
+          color: Colors.white70,
+        ),
         prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF64B5F6)),
         suffixIcon: IconButton(
           icon: Icon(
@@ -378,9 +395,10 @@ class _LoginScreenState extends State<LoginScreen> {
           valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
         ),
       )
-          : Text(
+          : const Text(
         'LOGIN',
-        style: GoogleFonts.roboto(
+        style: TextStyle(
+          fontFamily: 'Kallisto',
           fontSize: 16,
           fontWeight: FontWeight.bold,
           letterSpacing: 1.5,
@@ -394,9 +412,10 @@ class _LoginScreenState extends State<LoginScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           "Don't have an account? ",
-          style: GoogleFonts.roboto(
+          style: TextStyle(
+            fontFamily: 'Kallisto',
             color: Colors.white70,
             fontSize: 14,
           ),
@@ -415,10 +434,11 @@ class _LoginScreenState extends State<LoginScreen> {
             minimumSize: const Size(50, 30),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          child: Text(
+          child: const Text(
             'Sign Up',
-            style: GoogleFonts.roboto(
-              color: const Color(0xFF64B5F6),
+            style: TextStyle(
+              fontFamily: 'Kallisto',
+              color: Color(0xFF64B5F6),
               fontSize: 14,
               fontWeight: FontWeight.bold,
             ),

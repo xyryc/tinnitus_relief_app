@@ -254,11 +254,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
               Column(
                 children: [
-                  SizedBox(height: size.height * 0.02),
+                  SizedBox(height: size.height * 0.005),
 
                   HomeScreenHeader(),
 
-                  SizedBox(height: size.height * 0.05),
+                  SizedBox(height: size.height * 0.06),
 
                   _buildControlButtons(),
 
@@ -282,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
               Positioned(
                 right: size.width * 0.05,
-                top: size.height * 0.13,
+                top: size.height * 0.10,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -467,3 +467,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 }
+
+
+

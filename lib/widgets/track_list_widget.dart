@@ -25,8 +25,10 @@ class TrackListWidget extends StatelessWidget {
   });
 
   String _formatDuration(Duration duration) {
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes.remainder(60);
     String twoDigits(int n) => n.toString().padLeft(2, '0');
-    return '${twoDigits(duration.inMinutes)}:${twoDigits(duration.inSeconds.remainder(60))}';
+    return '$hours:${twoDigits(minutes)}';
   }
 
   @override

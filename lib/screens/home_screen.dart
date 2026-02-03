@@ -27,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // Timer mode
   bool _isTimerMode = false;
-  Duration _timerDuration = const Duration(minutes: 7);
-  Duration _remainingTime = const Duration(minutes: 7);
+  final Duration _timerDuration = const Duration(hours: 7);
+  Duration _remainingTime = const Duration(hours: 7);
   Timer? _timer;
 
   // Volume
@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         await _audioPlayer.stop();
 
         // Start from random position (no need to start from beginning)
-        await _audioPlayer.play(AssetSource('audio/djo_end_of_the_beginning.mp3'));
+        await _audioPlayer.play(AssetSource('audio/sample.mp3'));
 
         // Fade in over 2 seconds
         await _fadeInAudio();
@@ -179,8 +179,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // Toggle timer mode
   void _toggleTimerMode() {
+    print('DEBUG: Timer clicked! Current mode: $_isTimerMode');
     setState(() {
       _isTimerMode = !_isTimerMode;
+      print('DEBUG: Timer mode changed to: $_isTimerMode');
       if (!_isTimerMode) {
         _timer?.cancel();
         _remainingTime = _timerDuration;
@@ -201,7 +203,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final isTablet = size.width >= 600;
 
     return Scaffold(
       body: SafeArea(
@@ -229,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 right: 0,
                 child: Image.asset(
                   "assets/images/top_vector.png",
-                  height: size.height * 0.20,
+                  height: size.height * 0.18,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -336,36 +337,52 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          // Continuous button
-          GestureDetector(
+          // Continuous button with larger hit area
+          InkWell(
             onTap: () {
+              print('DEBUG: Continuous button tapped!');
               if (_isTimerMode) _toggleTimerMode();
             },
-            child: Text(
-              'continuous',
-              style: TextStyle(
-                fontFamily: "Kallisto",
-                fontWeight: !_isTimerMode ? FontWeight.w900 : FontWeight.w300,
-                fontSize: size.width * 0.037,
-                color: !_isTimerMode ? Colors.lightGreenAccent : Colors.white,
-                letterSpacing: 1.5,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.03,
+                vertical: size.height * 0.015,
+              ),
+              child: Text(
+                'continuous',
+                style: TextStyle(
+                  fontFamily: "Kallisto",
+                  fontWeight: !_isTimerMode ? FontWeight.w900 : FontWeight.w300,
+                  fontSize: size.width * 0.037,
+                  color: !_isTimerMode ? Colors.lightGreenAccent : Colors.white,
+                  letterSpacing: 1.5,
+                ),
               ),
             ),
           ),
 
-          SizedBox(width: size.width * 0.1),
+          SizedBox(width: size.width * 0.05),
 
-          // Timer button
-          GestureDetector(
-            onTap: _toggleTimerMode,
-            child: Text(
-              'timer',
-              style: TextStyle(
-                fontFamily: "Kallisto",
-                fontSize: size.width * 0.037,
-                fontWeight: _isTimerMode ? FontWeight.w900 : FontWeight.w300,
-                letterSpacing: 1.5,
-                color: _isTimerMode ? Colors.lightGreenAccent : Colors.white,
+          // Timer button with larger hit area
+          InkWell(
+            onTap: () {
+              print('DEBUG: Timer button tapped!');
+              _toggleTimerMode();
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * 0.03,
+                vertical: size.height * 0.015,
+              ),
+              child: Text(
+                'timer',
+                style: TextStyle(
+                  fontFamily: "Kallisto",
+                  fontSize: size.width * 0.037,
+                  fontWeight: _isTimerMode ? FontWeight.w900 : FontWeight.w300,
+                  letterSpacing: 1.5,
+                  color: _isTimerMode ? Colors.lightGreenAccent : Colors.white,
+                ),
               ),
             ),
           ),
@@ -395,7 +412,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       right: size.width * 0.06,
       top: size.height * 0.2,
       bottom: size.height * 0.15,
-      child: Container(
+      child: SizedBox(
         width: size.width * 0.12,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -201,56 +201,57 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    //final isTablet= size=>600;
+    final isTablet = size.width >= 600;
 
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/tinnitus_bg.png'),
-            fit: BoxFit.cover, // Adjust how the image fits
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/tinnitus_bg.png'),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-       child: Stack(
-          children: [
-            // 1️⃣ Background image
-            Positioned.fill(
-              child: Image.asset(
-                'assets/images/tinnitus_bg.png',
-                fit: BoxFit.cover,
+          child: Stack(
+            children: [
+              // 1️⃣ Background image
+              Positioned.fill(
+                child: Image.asset(
+                  'assets/images/tinnitus_bg.png',
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
 
-            // 2️⃣ Top decorative vector
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Image.asset(
-                "assets/images/top_vector.png",
-                height: size.height * 0.18,
-                fit: BoxFit.cover,
+              // 2️⃣ Top decorative vector
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Image.asset(
+                  "assets/images/top_vector.png",
+                  height: size.height * 0.20,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
 
-            // 3️⃣ Background gradients (BEHIND content)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Colors.blue.withValues(alpha: 0.50),
-                      Colors.blue.withValues(alpha: 0.25),
-                      Colors.blue.withValues(alpha: 0.50),
-                    ],
+              // 3️⃣ Background gradients (BEHIND content)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Colors.blue.withValues(alpha: 0.50),
+                        Colors.blue.withValues(alpha: 0.25),
+                        Colors.blue.withValues(alpha: 0.50),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
-           Column(
+              Column(
                 children: [
                   SizedBox(height: size.height * 0.02),
 
@@ -260,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                   _buildControlButtons(),
 
-                  SizedBox(height: 16),
+                  SizedBox(height: size.height * 0.02),
 
                   Expanded(
                     child: Row(
@@ -272,40 +273,40 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                   _buildSettingsButton(),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: size.height * 0.025),
                 ],
               ),
-           _buildVolumeBar(),
 
-           Positioned(
-              right: 18,
-              top: 110,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: const [
-                  Text(
-                    'earvana.',
-                    style: TextStyle(
-                      fontFamily: "Kallisto",
-                      fontSize: 20,
-                      color: Colors.white,
-                      letterSpacing: 1.2,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(0, 1),
-                          blurRadius: 4,
-                          color: Colors.black45,
-                        ),
-                      ],
+              _buildVolumeBar(),
+
+              Positioned(
+                right: size.width * 0.05,
+                top: size.height * 0.13,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      'earvana.',
+                      style: TextStyle(
+                        fontFamily: "Kallisto",
+                        fontSize: size.width * 0.045,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(0, 1),
+                            blurRadius: 4,
+                            color: Colors.black45,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-
-                  Text(
+                    Text(
                       'org',
-                      style:  TextStyle(
+                      style: TextStyle(
                         fontFamily: "Kallisto",
                         fontWeight: FontWeight.w200,
-                        fontSize: 14,
+                        fontSize: size.width * 0.032,
                         color: Colors.white,
                         letterSpacing: 1.2,
                         shadows: [
@@ -318,19 +319,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                     ),
                   ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-
-
   Widget _buildControlButtons() {
+    final size = MediaQuery.of(context).size;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 36.0),
+      padding: EdgeInsets.symmetric(horizontal: size.width * 0.09),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -344,14 +346,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               style: TextStyle(
                 fontFamily: "Kallisto",
                 fontWeight: !_isTimerMode ? FontWeight.w900 : FontWeight.w300,
-                fontSize: 16,
+                fontSize: size.width * 0.037,
                 color: !_isTimerMode ? Colors.lightGreenAccent : Colors.white,
                 letterSpacing: 1.5,
               ),
             ),
           ),
 
-          const SizedBox(width: 40),
+          SizedBox(width: size.width * 0.1),
 
           // Timer button
           GestureDetector(
@@ -360,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               'timer',
               style: TextStyle(
                 fontFamily: "Kallisto",
-                fontSize: 16,
+                fontSize: size.width * 0.037,
                 fontWeight: _isTimerMode ? FontWeight.w900 : FontWeight.w300,
                 letterSpacing: 1.5,
                 color: _isTimerMode ? Colors.lightGreenAccent : Colors.white,
@@ -387,47 +389,55 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   Widget _buildVolumeBar() {
-    return Container(
-      width: 60,
-      margin: const EdgeInsets.only(right: 24, top: 20, bottom: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: RotatedBox(
-              quarterTurns: -1,
-              child: SliderTheme(
-                data: SliderThemeData(
-                  trackHeight: 40,
-                  thumbShape: SliderComponentShape.noThumb,
-                  overlayShape: SliderComponentShape.noOverlay,
-                  activeTrackColor: Colors.transparent,
-                  inactiveTrackColor: Colors.transparent,
-                ),
-                child: Slider(
-                  value: _volume,
-                  min: 0.0,
-                  max: 1.0,
-                  onChanged: _changeVolume,
+    final size = MediaQuery.of(context).size;
+
+    return Positioned(
+      right: size.width * 0.06,
+      top: size.height * 0.2,
+      bottom: size.height * 0.15,
+      child: Container(
+        width: size.width * 0.12,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: RotatedBox(
+                quarterTurns: -1,
+                child: SliderTheme(
+                  data: SliderThemeData(
+                    trackHeight: 40,
+                    thumbShape: SliderComponentShape.noThumb,
+                    overlayShape: SliderComponentShape.noOverlay,
+                    activeTrackColor: Colors.transparent,
+                    inactiveTrackColor: Colors.transparent,
+                  ),
+                  child: Slider(
+                    value: _volume,
+                    min: 0.0,
+                    max: 1.0,
+                    onChanged: _changeVolume,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildSettingsButton() {
+    final size = MediaQuery.of(context).size;
+
     return Align(
       alignment: Alignment.bottomRight,
       child: Padding(
-        padding: const EdgeInsets.only(right: 24.0),
+        padding: EdgeInsets.only(right: size.width * 0.06),
         child: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.settings,
-            color: Color(0xFF54999d),
-            size: 32,
+            color: const Color(0xFF54999d),
+            size: size.width * 0.075,
           ),
           onPressed: () {
             // Settings action

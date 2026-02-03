@@ -1,38 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:tinnitus_relief/screens/home_screen.dart';
-import 'package:tinnitus_relief/screens/signup_screen.dart';
+import 'package:tinnitus_relief/screens/login_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  // Controllers to get text from input fields
+class _SignUpScreenState extends State<SignUpScreen> {
+  // Controllers for input fields
+  final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
 
   // Form key for validation
   final _formKey = GlobalKey<FormState>();
 
-  // To toggle password visibility
+  // Password visibility toggles
   bool _isPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
+
+  // Terms acceptance
+  bool _acceptTerms = false;
 
   // Loading state
   bool _isLoading = false;
 
   @override
   void dispose() {
-    // Clean up controllers when widget is disposed
+    _fullNameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  // Function to handle login
-  void _handleLogin() async {
+  // Function to handle signup
+  void _handleSignUp() async {
+    if (!_acceptTerms) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please accept the Terms & Conditions'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     if (_formKey.currentState!.validate()) {
       // Show loading state
       setState(() {
@@ -43,19 +60,20 @@ class _LoginScreenState extends State<LoginScreen> {
       await Future.delayed(const Duration(seconds: 2));
 
       // If form is valid, show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login Successful!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      // Here you would typically call your authentication API
-      print('Email: ${_emailController.text}');
-      print('Password: ${_passwordController.text}');
-
-      // Navigate to home screen
       if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Account Created Successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        // Here you would typically call your registration API
+        print('Full Name: ${_fullNameController.text}');
+        print('Email: ${_emailController.text}');
+        print('Password: ${_passwordController.text}');
+
+        // Navigate to home screen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -68,15 +86,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // Gradient background similar to the app
-        decoration: BoxDecoration(
+        // Gradient background
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              const Color(0xFF1a4d5e), // Teal dark
-              const Color(0xFF2d6a7f), // Teal medium
-              const Color(0xFF4a8ba8), // Teal light
+              Color(0xFF1a4d5e), // Teal dark
+              Color(0xFF2d6a7f), // Teal medium
+              Color(0xFF4a8ba8), // Teal light
             ],
           ),
         ),
@@ -93,10 +111,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Logo/Title Section
                     _buildHeader(),
 
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 40),
 
-                    // Login Form Card
-                    _buildLoginCard(),
+                    // Signup Form Card
+                    _buildSignUpCard(),
                   ],
                 ),
               ),
@@ -156,8 +174,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Login form card
-  Widget _buildLoginCard() {
+  // Signup form card
+  Widget _buildSignUpCard() {
     return Container(
       padding: const EdgeInsets.all(32.0),
       decoration: BoxDecoration(
@@ -180,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           // Welcome text
           const Text(
-            'Welcome Back',
+            'Create Account',
             style: TextStyle(
               fontFamily: 'Kallisto',
               fontSize: 28,
@@ -191,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Sign in to continue',
+            'Sign up to get started',
             style: TextStyle(
               fontFamily: 'Kallisto',
               fontSize: 14,
@@ -200,52 +218,98 @@ class _LoginScreenState extends State<LoginScreen> {
             textAlign: TextAlign.center,
           ),
 
-          const SizedBox(height: 40),
+          const SizedBox(height: 32),
+
+          // Full Name Field
+          _buildFullNameField(),
+
+          const SizedBox(height: 16),
 
           // Email Field
           _buildEmailField(),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
 
           // Password Field
           _buildPasswordField(),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
 
-          // Forgot Password
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () {
-                // Handle forgot password
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Forgot password clicked'),
-                  ),
-                );
-              },
-              child: const Text(
-                'Forgot Password?',
-                style: TextStyle(
-                  fontFamily: 'Kallisto',
-                  color: Color(0xFF64B5F6),
-                  fontSize: 14,
-                ),
-              ),
-            ),
-          ),
+          // Confirm Password Field
+          _buildConfirmPasswordField(),
+
+          const SizedBox(height: 20),
+
+          // Terms & Conditions Checkbox
+          _buildTermsCheckbox(),
 
           const SizedBox(height: 24),
 
-          // Login Button
-          _buildLoginButton(),
+          // Sign Up Button
+          _buildSignUpButton(),
 
           const SizedBox(height: 24),
 
-          // Sign Up Link
-          _buildSignUpLink(),
+          // Login Link
+          _buildLoginLink(),
         ],
       ),
+    );
+  }
+
+  // Full name input field
+  Widget _buildFullNameField() {
+    return TextFormField(
+      controller: _fullNameController,
+      keyboardType: TextInputType.name,
+      style: const TextStyle(
+        fontFamily: 'Kallisto',
+        color: Colors.white,
+      ),
+      decoration: InputDecoration(
+        labelText: 'Full Name',
+        labelStyle: const TextStyle(
+          fontFamily: 'Kallisto',
+          color: Colors.white70,
+        ),
+        prefixIcon: const Icon(Icons.person_outline, color: Color(0xFF64B5F6)),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Colors.white.withOpacity(0.2),
+            width: 1,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Color(0xFF64B5F6),
+            width: 2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Colors.redAccent,
+            width: 1,
+          ),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter your full name';
+        }
+        if (value.length < 3) {
+          return 'Name must be at least 3 characters';
+        }
+        return null;
+      },
     );
   }
 
@@ -297,8 +361,9 @@ class _LoginScreenState extends State<LoginScreen> {
         if (value == null || value.isEmpty) {
           return 'Please enter your email';
         }
-        // Basic email validation
-        if (!value.contains('@') || !value.contains('.')) {
+        // Email validation regex
+        final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+        if (!emailRegex.hasMatch(value)) {
           return 'Please enter a valid email';
         }
         return null;
@@ -365,18 +430,149 @@ class _LoginScreenState extends State<LoginScreen> {
         if (value == null || value.isEmpty) {
           return 'Please enter your password';
         }
-        if (value.length < 6) {
-          return 'Password must be at least 6 characters';
+        if (value.length < 8) {
+          return 'Password must be at least 8 characters';
+        }
+        // Check for at least one uppercase, one lowercase, and one number
+        if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)').hasMatch(value)) {
+          return 'Password must contain uppercase, lowercase & number';
         }
         return null;
       },
     );
   }
 
-  // Login button
-  Widget _buildLoginButton() {
+  // Confirm password input field
+  Widget _buildConfirmPasswordField() {
+    return TextFormField(
+      controller: _confirmPasswordController,
+      obscureText: !_isConfirmPasswordVisible,
+      style: const TextStyle(
+        fontFamily: 'Kallisto',
+        color: Colors.white,
+      ),
+      decoration: InputDecoration(
+        labelText: 'Confirm Password',
+        labelStyle: const TextStyle(
+          fontFamily: 'Kallisto',
+          color: Colors.white70,
+        ),
+        prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF64B5F6)),
+        suffixIcon: IconButton(
+          icon: Icon(
+            _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+            color: Colors.white70,
+          ),
+          onPressed: () {
+            setState(() {
+              _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+            });
+          },
+        ),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.1),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: Colors.white.withOpacity(0.2),
+            width: 1,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Color(0xFF64B5F6),
+            width: 2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Colors.redAccent,
+            width: 1,
+          ),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please confirm your password';
+        }
+        if (value != _passwordController.text) {
+          return 'Passwords do not match';
+        }
+        return null;
+      },
+    );
+  }
+
+  // Terms & Conditions checkbox
+  Widget _buildTermsCheckbox() {
+    return Row(
+      children: [
+        Checkbox(
+          value: _acceptTerms,
+          onChanged: (value) {
+            setState(() {
+              _acceptTerms = value ?? false;
+            });
+          },
+          activeColor: const Color(0xFF64B5F6),
+          checkColor: Colors.white,
+          side: BorderSide(
+            color: Colors.white.withOpacity(0.5),
+            width: 1.5,
+          ),
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _acceptTerms = !_acceptTerms;
+              });
+            },
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  fontFamily: 'Kallisto',
+                  fontSize: 13,
+                  color: Colors.white70,
+                ),
+                children: [
+                  const TextSpan(text: 'I agree to the '),
+                  TextSpan(
+                    text: 'Terms & Conditions',
+                    style: const TextStyle(
+                      color: Color(0xFF64B5F6),
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const TextSpan(text: ' and '),
+                  TextSpan(
+                    text: 'Privacy Policy',
+                    style: const TextStyle(
+                      color: Color(0xFF64B5F6),
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Sign up button
+  Widget _buildSignUpButton() {
     return ElevatedButton(
-      onPressed: _isLoading ? null : _handleLogin,
+      onPressed: _isLoading ? null : _handleSignUp,
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF64B5F6),
         foregroundColor: Colors.white,
@@ -389,32 +585,32 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       child: _isLoading
           ? const SizedBox(
-        height: 20,
-        width: 20,
-        child: CircularProgressIndicator(
-          strokeWidth: 2,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        ),
-      )
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            )
           : const Text(
-        'LOGIN',
-        style: TextStyle(
-          fontFamily: 'Kallisto',
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.5,
-        ),
-      ),
+              'SIGN UP',
+              style: TextStyle(
+                fontFamily: 'Kallisto',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+              ),
+            ),
     );
   }
 
-  // Sign up link
-  Widget _buildSignUpLink() {
+  // Login link
+  Widget _buildLoginLink() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
-          "Don't have an account? ",
+          'Already have an account? ',
           style: TextStyle(
             fontFamily: 'Kallisto',
             color: Colors.white70,
@@ -423,10 +619,10 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         TextButton(
           onPressed: () {
-            // Navigate to sign up screen
-            Navigator.push(
+            // Navigate back to login screen
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const SignUpScreen()),
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
             );
           },
           style: TextButton.styleFrom(
@@ -435,7 +631,7 @@ class _LoginScreenState extends State<LoginScreen> {
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           child: const Text(
-            'Sign Up',
+            'Login',
             style: TextStyle(
               fontFamily: 'Kallisto',
               color: Color(0xFF64B5F6),

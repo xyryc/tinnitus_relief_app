@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 import '../widgets/home_screen_header.dart';
@@ -227,7 +228,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       barrierLabel: "Settings",
       barrierColor: Colors.black.withOpacity(0.35),
       pageBuilder: (_, __, ___) {
-        return const SettingsModal();
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          child: const SettingsModal(),
+        );
       },
     );
   }

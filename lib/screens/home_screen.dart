@@ -292,16 +292,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   SizedBox(height: size.height * 0.02),
 
                   Expanded(
-                    child: Row(
-                      children: [
-                        Expanded(child: _buildTrackList()),
-                      ],
-                    ),
+                    child: Expanded(child: _buildTrackList()),
                   ),
 
-                  _buildSettingsButton(),
-
-                  SizedBox(height: size.height * 0.025),
+                  _buildBottomBar(),
                 ],
               ),
 
@@ -452,26 +446,69 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSettingsButton() {
+  Widget _buildBottomBar() {
     final size = MediaQuery.of(context).size;
 
-    return Align(
-      alignment: Alignment.bottomRight,
-      child: Padding(
-        padding: EdgeInsets.only(right: size.width * 0.06),
-        child: IconButton(
-          icon: Icon(
-            Icons.settings,
-            color: const Color(0xFF54999d),
-            size: size.width * 0.075,
+    return Container(
+      // Add background color here
+      decoration: BoxDecoration(
+        color: Colors.blue.withOpacity(0.1), // Semi-transparent black
+        borderRadius: BorderRadius.circular(2), // Optional: rounded corners
+      ),
+      padding: EdgeInsets.symmetric(
+        horizontal: size.width * 0.06,
+        vertical: size.height * 0.015, // Add vertical padding too
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Volume icon
+          Icon(
+            Icons.volume_up,
+            color: const Color(0xFF7FFF00),
+            size: size.width * 0.06,
           ),
-          onPressed: () {
-            // Settings action
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Settings clicked')),
-            );
-          },
-        ),
+
+          // Volume slider
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
+              child: SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: const Color(0xFF7FFF00),
+                  inactiveTrackColor: Colors.white30,
+                  thumbColor: const Color(0xFF7FFF00),
+                  overlayColor: const Color(0xFF7FFF00).withOpacity(0.3),
+                ),
+                child: Slider(
+                  value: _volume,
+                  min: 0.0,
+                  max: 1.0,
+                  onChanged: _changeVolume,
+                ),
+              ),
+            ),
+          ),
+
+          SizedBox(width: size.width * 0.04),
+
+          // Settings button
+          GestureDetector(
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Settings clicked')),
+              );
+            },
+            child: Image.asset(
+              'assets/images/settings.png',
+              width: size.width * 0.075,
+              height: size.width * 0.075,
+              // Optional: add color filter if you want to tint the image
+              // color: const Color(0xFF54999d),
+              // colorBlendMode: BlendMode.srcIn,
+            ),
+          )
+        ],
       ),
     );
   }

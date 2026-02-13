@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
-
+import 'dart:math' as math;
 import '../widgets/home_screen_header.dart';
 import '../widgets/track_list_widget.dart';
 import '../widgets/timer_modal.dart';
@@ -330,7 +330,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-
   Widget _buildControlButtons() {
     final size = MediaQuery.of(context).size;
 
@@ -455,44 +454,45 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         color: Colors.blue.withOpacity(0.1), // Semi-transparent black
         borderRadius: BorderRadius.circular(2), // Optional: rounded corners
       ),
+
       padding: EdgeInsets.symmetric(
         horizontal: size.width * 0.06,
-        vertical: size.height * 0.015, // Add vertical padding too
+        vertical: size.height * 0.018,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          // Volume icon
-          Icon(
-            Icons.volume_up,
-            color: const Color(0xFF7FFF00),
-            size: size.width * 0.06,
-          ),
 
-          // Volume slider
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Left block: label + dot meter
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: size.width * 0.03),
-              child: SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: const Color(0xFF7FFF00),
-                  inactiveTrackColor: Colors.white30,
-                  thumbColor: const Color(0xFF7FFF00),
-                  overlayColor: const Color(0xFF7FFF00).withOpacity(0.3),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "volume",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.55),
+                    fontSize: size.width * 0.032,
+                    letterSpacing: 3.0,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
-                child: Slider(
-                  value: _volume,
-                  min: 0.0,
-                  max: 1.0,
+                SizedBox(height: size.height * 0.008),
+                _DotVolumeMeter(
+                  value: _volume, // 0.0 -> 1.0
                   onChanged: _changeVolume,
+                  width: size.width * 0.62,
+                  height: size.height * 0.055,
+                  dotCount: 14,
                 ),
-              ),
+              ],
             ),
           ),
 
           SizedBox(width: size.width * 0.04),
 
-          // Settings button
+          // Gear icon (right)
           GestureDetector(
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -503,14 +503,114 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               'assets/images/settings.png',
               width: size.width * 0.075,
               height: size.width * 0.075,
-              // Optional: add color filter if you want to tint the image
-              // color: const Color(0xFF54999d),
-              // colorBlendMode: BlendMode.srcIn,
             ),
-          )
+          ),
         ],
       ),
     );
+  }
+}
+
+class _DotVolumeMeter extends StatelessWidget {
+  final double value; // 0..1
+  final ValueChanged<double> onChanged;
+  final double width;
+  final double height;
+  final int dotCount;
+
+  const _DotVolumeMeter({
+    required this.value,
+    required this.onChanged,
+    required this.width,
+    required this.height,
+    this.dotCount = 14,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final v = value.clamp(0.0, 1.0);
+    final activeDots = (v * dotCount).round().clamp(0, dotCount);
+
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTapDown: (d) => _setFromDx(d.localPosition.dx),
+      onPanUpdate: (d) => _setFromDx(d.localPosition.dx),
+      child: Container(
+        width: width,
+        height: height,
+        padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(height),
+          // capsule background like screenshot (dark translucent)
+          color: Colors.black.withOpacity(0.18),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.15),
+            width: 1.0,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(dotCount, (i) {
+              final isActive = i < activeDots;
+
+              // Gradient across active dots: green -> yellow -> orange
+              Color activeColorForIndex(int index) {
+                final t = dotCount <= 1 ? 0.0 : index / (dotCount - 1);
+                // piecewise gradient
+                if (t < 0.55) {
+                  // green -> yellow
+                  final u = t / 0.55;
+                  return Color.lerp(const Color(0xFF1CFF6A), const Color(0xFFF1FF3A), u)!;
+                } else {
+                  // yellow -> orange
+                  final u = (t - 0.55) / (1.0 - 0.55);
+                  return Color.lerp(const Color(0xFFF1FF3A), const Color(0xFFFF8A1F), u)!;
+                }
+              }
+
+              final dotColor = isActive
+                  ? activeColorForIndex(i)
+                  : Colors.white.withOpacity(0.22);
+
+              return Container(
+                width: height * 0.23,
+                height: height * 0.23,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: dotColor,
+                  boxShadow: isActive
+                      ? [
+                    BoxShadow(
+                      color: dotColor.withOpacity(0.35),
+                      blurRadius: 6,
+                      spreadRadius: 0.5,
+                    ),
+                  ]
+                      : [],
+                ),
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _setFromDx(double dx) {
+    // convert tap/drag X to 0..1
+    final x = dx.clamp(0.0, width);
+    final newValue = (x / width).clamp(0.0, 1.0);
+    // snap to dot steps (like screenshot)
+    final snapped = (newValue * dotCount).round() / dotCount;
+    onChanged(snapped.clamp(0.0, 1.0));
   }
 }
 

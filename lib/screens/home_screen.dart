@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:async';
 import '../widgets/home_screen_header.dart';
@@ -7,6 +7,8 @@ import '../widgets/timer_modal.dart';
 import '../widgets/control_buttons.dart';
 import '../widgets/volume_bar.dart';
 import '../widgets/bottom_bar.dart';
+import '../widgets/settings_modal.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -217,6 +219,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
+  // Show settings modal
+  void _openSettingsModal() {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "Settings",
+      barrierColor: Colors.black.withOpacity(0.35),
+      pageBuilder: (_, __, ___) {
+        return const SettingsModal();
+      },
+    );
+  }
 
   // Change volume
   void _changeVolume(double value) {
@@ -242,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           child: Stack(
             children: [
 
-              // 1️⃣ Background image
+              // 1?? Background image
               Positioned.fill(
                 child: Image.asset(
                   'assets/images/tinnitus_bg.png',
@@ -250,7 +264,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
 
-              // 2️⃣ Top decorative vector
+              // 2?? Top decorative vector
               Positioned(
                 top: 0,
                 left: 0,
@@ -262,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
 
-              // 3️⃣ Background gradients
+              // 3?? Background gradients
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
@@ -279,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
 
-              // 4️⃣ Main content
+              // 4?? Main content
               Column(
                 children: [
                   SizedBox(height: size.height * 0.005),
@@ -319,22 +333,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   BottomBar(
                     volume: _volume,
                     onVolumeChanged: _changeVolume,
-                    onSettingsTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Settings clicked')),
-                      );
-                    },
+                    onSettingsTap: _openSettingsModal,
                   ),
                 ],
               ),
 
-              // 5️⃣ Volume bar
+              // 5?? Volume bar
               VolumeBar(
                 volume: _volume,
                 onVolumeChanged: _changeVolume,
               ),
 
-              // 6️⃣ Positioned tagline
+              // 6?? Positioned tagline
               Positioned(
                 right: size.width * 0.05,
                 top: size.height * 0.10,

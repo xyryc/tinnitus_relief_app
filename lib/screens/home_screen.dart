@@ -269,9 +269,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                       colors: [
-                        Colors.blue.withValues(alpha: 0.50),
-                        Colors.blue.withValues(alpha: 0.25),
-                        Colors.blue.withValues(alpha: 0.50),
+                        Colors.blue.withValues(alpha: 0.15),
+                        Colors.blue.withValues(alpha: 0.01),
+                        Colors.blue.withValues(alpha: 0.15),
                       ],
                     ),
                   ),

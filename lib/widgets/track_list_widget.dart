@@ -67,7 +67,7 @@ class TrackListWidget extends StatelessWidget {
           onTap: () => onTrackTap(index),
           child: Container(
             margin: const EdgeInsets.only(bottom: 8.0),
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 40),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
             decoration: BoxDecoration(
               color: isSelected
                   ? Colors.white.withOpacity(0.15)

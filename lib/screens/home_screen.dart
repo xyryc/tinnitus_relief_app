@@ -28,8 +28,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // Timer mode
   bool _isTimerMode = false;
-  final Duration _timerDuration = const Duration(hours: 7);
-  Duration _remainingTime = const Duration(hours: 7);
+  final Duration _timerDuration = const Duration(hours: 8);
+  Duration _remainingTime = const Duration(hours: 8);
   double _fadeOutMinutes = 1.5;
   Timer? _timer;
 
@@ -342,7 +342,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: size.width * 0.09),
+      // padding: EdgeInsets.symmetric(horizontal: size.width * 0.09),
+      padding: const EdgeInsets.only(right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -362,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 style: TextStyle(
                   fontFamily: "Kallisto",
                   fontWeight: !_isTimerMode ? FontWeight.w900 : FontWeight.w300,
-                  fontSize: size.width * 0.037,
+                  fontSize: 13,
                   color: !_isTimerMode ? Colors.lightGreenAccent : Colors.white,
                   letterSpacing: 1.5,
                 ),
@@ -370,7 +371,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          SizedBox(width: size.width * 0.05),
+          SizedBox(width: 2),
 
           // Timer button with larger hit area
           InkWell(
@@ -387,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 'timer',
                 style: TextStyle(
                   fontFamily: "Kallisto",
-                  fontSize: size.width * 0.037,
+                  fontSize: 13  ,
                   fontWeight: _isTimerMode ? FontWeight.w900 : FontWeight.w300,
                   letterSpacing: 1.5,
                   color: _isTimerMode ? Colors.lightGreenAccent : Colors.white,

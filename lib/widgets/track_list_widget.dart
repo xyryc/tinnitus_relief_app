@@ -97,7 +97,7 @@ class TrackListWidget extends StatelessWidget {
                   size: 24,
                 ),
 
-                const SizedBox(width: 16),
+                const SizedBox(width: 10),
 
                 // Track name
                 Expanded(
@@ -120,7 +120,9 @@ class TrackListWidget extends StatelessWidget {
                     color: Colors.white70,
                     size: 20,
                   ),
-                  const SizedBox(width: 16),
+
+                  const SizedBox(width: 26),
+
                   if (isTimerMode)
                     Text(
                       _formatDuration(remainingTime),

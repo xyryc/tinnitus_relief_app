@@ -45,19 +45,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // Track list
   final List<Map<String, String>> _tracks = [
-    {'name': 'ocean aire : calm', 'file': 'assets/audio/ocean_calm.mp3'},
-    {'name': 'ocean aire : breezy', 'file': 'assets/audio/ocean_breezy.mp3'},
-    {'name': 'ocean aire : active', 'file': 'assets/audio/ocean_active.mp3'},
-    {'name': 'winds : calm', 'file': 'assets/audio/winds_calm.mp3'},
-    {'name': 'winds : active', 'file': 'assets/audio/winds_active.mp3'},
-    {'name': 'rain : light', 'file': 'assets/audio/rain_light.mp3'},
-    {'name': 'rain : medium', 'file': 'assets/audio/rain_medium.mp3'},
-    {'name': 'storm : light', 'file': 'assets/audio/storm_light.mp3'},
-    {'name': 'storm : active', 'file': 'assets/audio/storm_active.mp3'},
-    {'name': 'stream : light', 'file': 'assets/audio/stream_light.mp3'},
-    {'name': 'stream : medium', 'file': 'assets/audio/stream_medium.mp3'},
-    {'name': 'white noise : static', 'file': 'assets/audio/white_noise_static.mp3'},
-    {'name': 'white WAV : dynamic', 'file': 'assets/audio/white_wav_dynamic.mp3'},
+    {'name': 'ocean aire : calm', 'file': 'audio/TR-OAC.mst13.mp3'},
+    {'name': 'ocean aire : active', 'file': 'audio/TR-OAA.mst11.mp3'},
+    {'name': 'rain : light', 'file': 'audio/TR-Rain-lite.mst13.mp3'},
+    {'name': 'rain : medium', 'file': 'audio/TR-Rain-med.mst13.mp3'},
+    {'name': 'storm : light', 'file': 'audio/TR-Storm-lite.mst11.mp3'},
+    {'name': 'storm : active', 'file': 'audio/TR-Storm-actv.mst11.mp3'},
+    {'name': 'stream : light', 'file': 'audio/TR-Stream.mst11.mp3'},
+    {'name': 'stream : medium', 'file': 'audio/TR-River.mst11.mp3'},
+    {'name': 'crickets : medium', 'file': 'audio/TR-Crickets.mst11.mp3'},
+    {'name': 'winds : medium', 'file': 'audio/TR-Wind.mst14.mp3'},
+    {'name': 'white WAV : dynamic', 'file': 'audio/TR-WhiteWAV.mst10.mp3'},
+    {'name': 'white noise : static', 'file': 'audio/TR-StandardWNoise.mp3'}
   ];
 
   @override
@@ -121,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         await _audioPlayer.stop();
 
         // Start from random position (no need to start from beginning)
-        await _audioPlayer.play(AssetSource('audio/sample.mp3'));
+        await _audioPlayer.play(AssetSource(_tracks[trackIndex]['file']!));
 
         // Fade in over 2 seconds
         await _fadeInAudio();

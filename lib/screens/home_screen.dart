@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Scaffold(
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/tinnitus_bg.png'),
               fit: BoxFit.cover,
@@ -241,6 +241,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           ),
           child: Stack(
             children: [
+
               // 1️⃣ Background image
               Positioned.fill(
                 child: Image.asset(
@@ -261,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
 
-              // 3️⃣ Background gradients (BEHIND content)
+              // 3️⃣ Background gradients
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
@@ -278,13 +279,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
               ),
 
+              // 4️⃣ Main content
               Column(
                 children: [
                   SizedBox(height: size.height * 0.005),
 
-                  HomeScreenHeader(),
+                  const HomeScreenHeader(),
 
-                  SizedBox(height: size.height * 0.06),
+                  SizedBox(height: size.height * 0.08),
 
                   _buildControlButtons(),
 
@@ -304,48 +306,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ],
               ),
 
+              // 5️⃣ Volume bar
               _buildVolumeBar(),
 
+              // 6️⃣ Positioned tagline
               Positioned(
                 right: size.width * 0.05,
                 top: size.height * 0.10,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      'earvana.',
-                      style: TextStyle(
-                        fontFamily: "Kallisto",
-                        fontSize: size.width * 0.045,
-                        color: Colors.white,
-                        letterSpacing: 1.2,
-                        shadows: [
-                          Shadow(
-                            offset: Offset(0, 1),
-                            blurRadius: 4,
-                            color: Colors.black45,
-                          ),
-                        ],
+                child: Text(
+                  'the professional masking solution',
+                  style: TextStyle(
+                    fontFamily: "Kallisto",
+                    fontSize: 12,
+                    color: Colors.white,
+                    letterSpacing: 1.2,
+                    shadows: const [
+                      Shadow(
+                        offset: Offset(0, 1),
+                        blurRadius: 4,
+                        color: Colors.black45,
                       ),
-                    ),
-                    Text(
-                      'org',
-                      style: TextStyle(
-                        fontFamily: "Kallisto",
-                        fontWeight: FontWeight.w200,
-                        fontSize: size.width * 0.032,
-                        color: Colors.white,
-                        letterSpacing: 1.2,
-                        shadows: [
-                          Shadow(
-                            offset: Offset(0, 1),
-                            blurRadius: 4,
-                            color: Colors.black45,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -354,6 +336,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ),
     );
   }
+
 
   Widget _buildControlButtons() {
     final size = MediaQuery.of(context).size;

@@ -101,7 +101,6 @@ class _TimerModalState extends State<TimerModal> {
   void _handleSave() {
     final duration = Duration(hours: _selectedHours, minutes: _selectedMinutes);
     widget.onSave(duration, _fadeOutMinutes);
-    widget.onClose();
   }
 
   @override

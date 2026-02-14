@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // Timer mode
   bool _isTimerMode = false;
-  final Duration _timerDuration = const Duration(hours: 8);
+  Duration _timerDuration = const Duration(hours: 8);
   Duration _remainingTime = const Duration(hours: 8);
   double _fadeOutMinutes = 1.5;
   Timer? _timer;
@@ -213,6 +213,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             initialFadeOutMinutes: _fadeOutMinutes,
             onSave: (duration, fadeOut) {
               setState(() {
+                _timerDuration = duration;
                 _remainingTime = duration;
                 _fadeOutMinutes = fadeOut;
                 _isTimerMode = true;

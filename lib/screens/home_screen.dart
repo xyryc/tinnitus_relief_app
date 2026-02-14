@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // Volume
   double _volume = 0.7; // 70% volume
+  final String _activeOutputDevice = 'internal speaker';
 
   // Fade animation controller
   AnimationController? _fadeController;
@@ -239,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       pageBuilder: (_, __, ___) {
         return BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-          child: const SettingsModal(),
+          child: SettingsModal(activeOutputDevice: _activeOutputDevice),
         );
       },
     );

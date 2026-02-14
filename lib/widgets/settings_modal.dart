@@ -2,7 +2,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class SettingsModal extends StatelessWidget {
-  const SettingsModal();
+  final String activeOutputDevice;
+
+  const SettingsModal({
+    super.key,
+    this.activeOutputDevice = 'internal speaker',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,7 @@ class SettingsModal extends StatelessWidget {
                           color: Colors.black.withOpacity(0.35),
                           blurRadius: 24,
                           offset: const Offset(0, 14),
-                        )
+                        ),
                       ],
                     ),
                     child: Column(
@@ -47,7 +52,7 @@ class SettingsModal extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 18, bottom: 10),
                           child: Text(
-                            "SETTINGS",
+                            'SETTINGS',
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.9),
                               fontSize: 34,
@@ -67,37 +72,27 @@ class SettingsModal extends StatelessWidget {
                         Expanded(
                           child: ListView(
                             padding: const EdgeInsets.only(bottom: 18),
-                            children: const [
-                              SizedBox(height: 10),
-
-                              _SectionHeader("audio output"),
-                              _SectionBody(
-                                "!!!   NOTE:  The user should be able to switch between:\n"
-                                    ">  internal speaker\n"
-                                    ">  bluetooth device (s)\n"
-                                    ">  misc, etc",
+                            children: [
+                              const SizedBox(height: 10),
+                              const _SectionHeader('audio output'),
+                              _AudioOutputBody(activeOutputDevice: activeOutputDevice),
+                              const _SectionHeader('my subscription'),
+                              const _SectionBody(
+                                '!!!   NOTE:\n'
+                                "do we need anything here?     if there's only 1 subscription option, maybe not?",
                               ),
-
-                              _SectionHeader("my subscription"),
-                              _SectionBody(
-                                "!!!   NOTE:\n"
-                                    "do we need anything here?     if there’s only 1 subscription option, maybe not?",
+                              const _SectionHeader('leave a review'),
+                              const _SectionBody(
+                                '!!!   NOTE:\n'
+                                'this would link to OUR review page in the App Store/Google Play Store',
                               ),
-
-                              _SectionHeader("leave a review"),
-                              _SectionBody(
-                                "!!!   NOTE:\n"
-                                    "this would link to OUR review page in the App Store/Google Play Store",
+                              const _SectionHeader('faq'),
+                              const _SectionBody(
+                                '!!!   note:  we can either invoke a new popup window here - with text...\n'
+                                'or...   just link to the website FAQ page?',
                               ),
-
-                              _SectionHeader("faq"),
-                              _SectionBody(
-                                "!!!   note:  we can either invoke a new popup window here - with text…\n"
-                                    "or…   just link to the website FAQ page?",
-                              ),
-
-                              _SectionHeader("legal"),
-                              _LegalLinks(),
+                              const _SectionHeader('legal'),
+                              const _LegalLinks(),
                             ],
                           ),
                         ),
@@ -123,6 +118,58 @@ class SettingsModal extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _AudioOutputBody extends StatelessWidget {
+  final String activeOutputDevice;
+
+  const _AudioOutputBody({required this.activeOutputDevice});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(22, 12, 22, 18),
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        border: Border(
+          bottom: BorderSide(color: Colors.white.withOpacity(0.06), width: 1),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'active device: $activeOutputDevice',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.92),
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.2,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            'available outputs:',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.65),
+              fontSize: 14,
+              letterSpacing: 0.2,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'internal speaker\nbluetooth device(s)\nmisc',
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.82),
+              fontSize: 15,
+              height: 1.35,
+              letterSpacing: 0.2,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -205,7 +252,7 @@ class _LegalLinks extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                "»",
+                '>>',
                 style: TextStyle(
                   color: Colors.white.withOpacity(0.55),
                   fontSize: 22,
@@ -224,8 +271,8 @@ class _LegalLinks extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          link("privacy policy", () {}),
-          link("terms and conditions", () {}),
+          link('privacy policy', () {}),
+          link('terms and conditions', () {}),
         ],
       ),
     );
@@ -276,5 +323,5 @@ class _ChamferClipper extends CustomClipper<Path> {
   }
 }
 
-// tiny helper (avoid importing dart:math in your file if you don’t want to)
+// tiny helper (avoid importing dart:math in your file if you don't want to)
 double mathMin(double a, double b) => a < b ? a : b;

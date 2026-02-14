@@ -111,116 +111,118 @@ class _TimerModalState extends State<TimerModal> {
     return SafeArea(
       child: Material(
         type: MaterialType.transparency,
-        child: Center(
-          child: ClipPath(
-            clipper: _ChamferClipper(
-              topLeft: 18,
-              topRight: 32,
-              bottomLeft: 32,
-              bottomRight: 18,
-            ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-              child: Container(
-                width: mathMin(size.width * 0.88, 600),
-                constraints: BoxConstraints(
-                  maxHeight: size.height * 0.85,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.15),
-                  border: Border.all(
-                    color: Colors.white.withOpacity(0.15),
-                    width: 1.5,
-                  ),
-                ),
         child: Stack(
           children: [
-            // Main content (scrollable)
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Title
-                    Text(
-                      'TIMER',
-                      style: TextStyle(
-                        fontFamily: 'Kallisto',
-                        fontSize: 28,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white.withOpacity(0.9),
-                        letterSpacing: 8,
+            Center(
+              child: ClipPath(
+                clipper: _ChamferClipper(
+                  topLeft: 18,
+                  topRight: 32,
+                  bottomLeft: 32,
+                  bottomRight: 18,
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                  child: Container(
+                    width: mathMin(size.width * 0.88, 600),
+                    constraints: BoxConstraints(
+                      maxHeight: size.height * 0.85,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.15),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.15),
+                        width: 1.5,
                       ),
                     ),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 32, 24, 32),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Title
+                            Text(
+                              'TIMER',
+                              style: TextStyle(
+                                fontSize: 34,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white.withOpacity(0.9),
+                                letterSpacing: 4,
+                              ),
+                            ),
 
-                    const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
-                    // Current Time Section
-                    _buildCurrentTimeSection(),
+                            // Current Time Section
+                            _buildCurrentTimeSection(),
 
-                    const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
-                    // Duration Picker Section
-                    _buildDurationSection(),
+                            // Duration Picker Section
+                            _buildDurationSection(),
 
-                    const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
-                    // Stop Time Section
-                    _buildStopTimeSection(),
+                            // Stop Time Section
+                            _buildStopTimeSection(),
 
-                    const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
-                    // Fade Out Section
-                    _buildFadeOutSection(),
+                            // Fade Out Section
+                            _buildFadeOutSection(),
 
-                    const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
-                    // Save Button
-                    ElevatedButton(
-                      onPressed: _handleSave,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF7FFF00),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 40,
-                          vertical: 14,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: const Text(
-                        'SAVE',
-                        style: TextStyle(
-                          fontFamily: 'Kallisto',
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
+                            // Save Button
+                            ElevatedButton(
+                              onPressed: _handleSave,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF64B5F6),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 28,
+                                  vertical: 16,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                elevation: 5,
+                                shadowColor: const Color(0xFF64B5F6).withOpacity(0.5),
+                              ),
+                              child: const Text(
+                                'SAVE',
+                                style: TextStyle(
+                                  fontFamily: 'Kallisto',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
 
             // Close button
             Positioned(
-              top: 12,
-              left: 12,
-              child: IconButton(
-                onPressed: widget.onClose,
-                icon: const Icon(Icons.close),
-                color: Colors.white.withOpacity(0.7),
-                iconSize: 24,
+              left: size.width * 0.12,
+              top: size.height * 0.10,
+              child: GestureDetector(
+                onTap: widget.onClose,
+                child: Icon(
+                  Icons.close,
+                  size: 34,
+                  color: Colors.white.withOpacity(0.85),
+                ),
               ),
             ),
           ],
-        ),
-      ),
-            ),
-          ),
         ),
       ),
     );

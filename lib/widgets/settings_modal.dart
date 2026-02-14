@@ -79,10 +79,7 @@ class SettingsModal extends StatelessWidget {
                               const _SectionHeader('audio output'),
                               _AudioOutputBody(activeOutputDevice: activeOutputDevice),
                               const _SectionHeader('my subscription'),
-                              const _SectionBody(
-                                '!!!   NOTE:\n'
-                                "do we need anything here?     if there's only 1 subscription option, maybe not?",
-                              ),
+                              const _SectionBody('coming soon'),
                               const _SectionHeader('leave a review'),
                               const _ReviewBody(),
                               const _SectionHeader('faq'),
@@ -143,25 +140,6 @@ class _AudioOutputBody extends StatelessWidget {
               color: Colors.white.withOpacity(0.92),
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              letterSpacing: 0.2,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'available outputs:',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.65),
-              fontSize: 14,
-              letterSpacing: 0.2,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'internal speaker\nbluetooth device(s)\nmisc',
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.82),
-              fontSize: 15,
-              height: 1.35,
               letterSpacing: 0.2,
             ),
           ),

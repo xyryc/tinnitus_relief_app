@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsModal extends StatelessWidget {
   final String activeOutputDevice;
@@ -82,15 +84,9 @@ class SettingsModal extends StatelessWidget {
                                 "do we need anything here?     if there's only 1 subscription option, maybe not?",
                               ),
                               const _SectionHeader('leave a review'),
-                              const _SectionBody(
-                                '!!!   NOTE:\n'
-                                'this would link to OUR review page in the App Store/Google Play Store',
-                              ),
+                              const _ReviewBody(),
                               const _SectionHeader('faq'),
-                              const _SectionBody(
-                                '!!!   note:  we can either invoke a new popup window here - with text...\n'
-                                'or...   just link to the website FAQ page?',
-                              ),
+                              const _FaqBody(),
                               const _SectionHeader('legal'),
                               const _LegalLinks(),
                             ],
@@ -228,13 +224,117 @@ class _SectionBody extends StatelessWidget {
   }
 }
 
+class _ReviewBody extends StatelessWidget {
+  const _ReviewBody();
+
+  Future<void> _openStoreReview() async {
+    // Temporary generic links until production store listing URLs are available.
+    final Uri storeUri = kIsWeb
+        ? Uri.parse('https://play.google.com/store/apps')
+        : defaultTargetPlatform == TargetPlatform.iOS
+            ? Uri.parse('https://apps.apple.com/us/charts/iphone')
+            : defaultTargetPlatform == TargetPlatform.android
+                ? Uri.parse('https://play.google.com/store/apps')
+                : Uri.parse('https://apps.apple.com/us/charts/iphone');
+
+    await launchUrl(storeUri, mode: LaunchMode.externalApplication);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _openStoreReview,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(22, 12, 22, 18),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: Border(
+            bottom: BorderSide(color: Colors.white.withOpacity(0.06), width: 1),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Open App Store / Google Play',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.82),
+                  fontSize: 15,
+                  height: 1.35,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ),
+            Text(
+              '>>',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.72),
+                fontSize: 22,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FaqBody extends StatelessWidget {
+  const _FaqBody();
+
+  Future<void> _openFaq() async {
+    final Uri faqUri = Uri.parse('https://msiliverman.vercel.app/faq');
+    await launchUrl(faqUri, mode: LaunchMode.externalApplication);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: _openFaq,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(22, 12, 22, 18),
+        decoration: BoxDecoration(
+          color: Colors.transparent,
+          border: Border(
+            bottom: BorderSide(color: Colors.white.withOpacity(0.06), width: 1),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Open FAQ',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.82),
+                  fontSize: 15,
+                  height: 1.35,
+                  letterSpacing: 0.2,
+                ),
+              ),
+            ),
+            Text(
+              '>>',
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.72),
+                fontSize: 22,
+                fontWeight: FontWeight.w300,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 /// Legal links block (matches screenshot layout)
 class _LegalLinks extends StatelessWidget {
   const _LegalLinks();
 
   @override
   Widget build(BuildContext context) {
-    Widget link(String label, VoidCallback onTap) {
+    Widget link(String label, Future<void> Function() onTap) {
       return GestureDetector(
         onTap: onTap,
         child: Padding(
@@ -271,8 +371,18 @@ class _LegalLinks extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          link('privacy policy', () {}),
-          link('terms and conditions', () {}),
+          link('privacy policy', () async {
+            await launchUrl(
+              Uri.parse('https://msiliverman.vercel.app/privacy-policy'),
+              mode: LaunchMode.externalApplication,
+            );
+          }),
+          link('terms of service', () async {
+            await launchUrl(
+              Uri.parse('https://msiliverman.vercel.app/terms-of-service'),
+              mode: LaunchMode.externalApplication,
+            );
+          }),
         ],
       ),
     );

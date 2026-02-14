@@ -86,40 +86,59 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        // Gradient background
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF1a4d5e), // Teal dark
-              Color(0xFF2d6a7f), // Teal medium
-              Color(0xFF4a8ba8), // Teal light
-            ],
+          image: DecorationImage(
+            image: AssetImage('assets/images/tinnitus_bg.png'),
+            fit: BoxFit.cover,
           ),
         ),
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Logo/Title Section
-                    _buildHeader(),
-
-                    const SizedBox(height: 40),
-
-                    // Signup Form Card
-                    _buildSignUpCard(),
-                  ],
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/tinnitus_bg.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Colors.blue.withValues(alpha: 0.15),
+                      Colors.blue.withValues(alpha: 0.01),
+                      Colors.blue.withValues(alpha: 0.15),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
+            SafeArea(
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // Logo/Title Section
+                        _buildHeader(),
+
+                        const SizedBox(height: 40),
+
+                        // Signup Form Card
+                        _buildSignUpCard(),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

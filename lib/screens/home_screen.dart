@@ -199,25 +199,34 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // Show timer modal
   void _showTimerModal() {
-    showDialog(
+    showGeneralDialog(
       context: context,
-      builder: (context) => TimerModal(
-        initialDuration: _remainingTime,
-        initialFadeOutMinutes: _fadeOutMinutes,
-        onSave: (duration, fadeOut) {
-          setState(() {
-            _remainingTime = duration;
-            _fadeOutMinutes = fadeOut;
-            _isTimerMode = true;
-            if (_isPlaying) {
-              _startTimer();
-            }
-          });
-        },
-        onClose: () {
-          Navigator.of(context).pop();
-        },
-      ),
+      barrierDismissible: true,
+      barrierLabel: "Timer",
+      barrierColor: Colors.black.withOpacity(0.35),
+      pageBuilder: (_, __, ___) {
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          child: TimerModal(
+            initialDuration: _remainingTime,
+            initialFadeOutMinutes: _fadeOutMinutes,
+            onSave: (duration, fadeOut) {
+              setState(() {
+                _remainingTime = duration;
+                _fadeOutMinutes = fadeOut;
+                _isTimerMode = true;
+                if (_isPlaying) {
+                  _startTimer();
+                }
+              });
+              Navigator.of(context).pop();
+            },
+            onClose: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        );
+      },
     );
   }
   // Show settings modal

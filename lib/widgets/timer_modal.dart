@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui';
 import 'dart:async';
 
 class TimerModal extends StatefulWidget {
@@ -105,36 +106,33 @@ class _TimerModalState extends State<TimerModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.85,
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.85,
-        ),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFF2d5f7f).withOpacity(0.95),
-              const Color(0xFF1a4a6f).withOpacity(0.95),
-              const Color(0xFF2d5f7f).withOpacity(0.95),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(
-            color: const Color(0xFF64B5F6).withOpacity(0.3),
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 30,
-              spreadRadius: 5,
+    final size = MediaQuery.of(context).size;
+    
+    return SafeArea(
+      child: Material(
+        type: MaterialType.transparency,
+        child: Center(
+          child: ClipPath(
+            clipper: _ChamferClipper(
+              topLeft: 18,
+              topRight: 32,
+              bottomLeft: 32,
+              bottomRight: 18,
             ),
-          ],
-        ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+              child: Container(
+                width: mathMin(size.width * 0.88, 600),
+                constraints: BoxConstraints(
+                  maxHeight: size.height * 0.85,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.15),
+                  border: Border.all(
+                    color: Colors.white.withOpacity(0.15),
+                    width: 1.5,
+                  ),
+                ),
         child: Stack(
           children: [
             // Main content (scrollable)
@@ -151,7 +149,7 @@ class _TimerModalState extends State<TimerModal> {
                         fontFamily: 'Kallisto',
                         fontSize: 28,
                         fontWeight: FontWeight.w300,
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withOpacity(0.9),
                         letterSpacing: 8,
                       ),
                     ),
@@ -182,7 +180,7 @@ class _TimerModalState extends State<TimerModal> {
                     ElevatedButton(
                       onPressed: _handleSave,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF64B5F6),
+                        backgroundColor: const Color(0xFF7FFF00),
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 40,
@@ -211,23 +209,18 @@ class _TimerModalState extends State<TimerModal> {
             Positioned(
               top: 12,
               left: 12,
-              child: GestureDetector(
-                onTap: widget.onClose,
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
+              child: IconButton(
+                onPressed: widget.onClose,
+                icon: const Icon(Icons.close),
+                color: Colors.white.withOpacity(0.7),
+                iconSize: 24,
               ),
             ),
           ],
+        ),
+      ),
+            ),
+          ),
         ),
       ),
     );
@@ -430,7 +423,7 @@ class _TimerModalState extends State<TimerModal> {
             child: Container(
               height: 50,
               decoration: BoxDecoration(
-                color: const Color(0xFF64B5F6).withOpacity(0.2),
+                color: const Color(0xFF7FFF00).withOpacity(0.2),
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
@@ -707,3 +700,50 @@ class ClockPainter extends CustomPainter {
     return oldDelegate.time != time;
   }
 }
+
+// Chamfer clipper for cut corners (matching settings modal)
+class _ChamferClipper extends CustomClipper<Path> {
+  final double topLeft;
+  final double topRight;
+  final double bottomLeft;
+  final double bottomRight;
+
+  _ChamferClipper({
+    required this.topLeft,
+    required this.topRight,
+    required this.bottomLeft,
+    required this.bottomRight,
+  });
+
+  @override
+  Path getClip(Size s) {
+    final p = Path();
+
+    // Start top-left with chamfer
+    p.moveTo(topLeft, 0);
+    p.lineTo(s.width - topRight, 0);
+    p.lineTo(s.width, topRight);
+
+    p.lineTo(s.width, s.height - bottomRight);
+    p.lineTo(s.width - bottomRight, s.height);
+
+    p.lineTo(bottomLeft, s.height);
+    p.lineTo(0, s.height - bottomLeft);
+
+    p.lineTo(0, topLeft);
+    p.close();
+
+    return p;
+  }
+
+  @override
+  bool shouldReclip(covariant _ChamferClipper oldClipper) {
+    return topLeft != oldClipper.topLeft ||
+        topRight != oldClipper.topRight ||
+        bottomLeft != oldClipper.bottomLeft ||
+        bottomRight != oldClipper.bottomRight;
+  }
+}
+
+// Helper function
+double mathMin(double a, double b) => a < b ? a : b;

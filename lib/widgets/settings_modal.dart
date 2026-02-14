@@ -28,7 +28,7 @@ class SettingsModal extends StatelessWidget {
                     width: mathMin(size.width * 0.88, 600),
                     height: mathMin(size.height * 0.72, 720),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1a1d24).withOpacity(0.70),
+                      color: Colors.blue.withOpacity(0.15),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.18),
                         width: 1,

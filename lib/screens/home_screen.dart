@@ -5,7 +5,6 @@ import 'dart:async';
 import '../widgets/home_screen_header.dart';
 import '../widgets/track_list_widget.dart';
 import '../widgets/timer_modal.dart';
-import '../widgets/control_buttons.dart';
 import '../widgets/volume_bar.dart';
 import '../widgets/bottom_bar.dart';
 import '../widgets/settings_modal.dart';
@@ -43,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   // Fade animation controller
   AnimationController? _fadeController;
+  final ScrollController _trackScrollController = ScrollController();
 
   // Blink animation for pause state
   AnimationController? _blinkController;
@@ -97,9 +97,36 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   void dispose() {
     _fadeController?.dispose();
     _blinkController?.dispose();
+    _trackScrollController.dispose();
     _audioPlayer.dispose();
     _timer?.cancel();
     super.dispose();
+  }
+
+  void _scrollTracksUp() {
+    if (!_trackScrollController.hasClients) return;
+    final target = (_trackScrollController.offset - 260).clamp(
+      0.0,
+      _trackScrollController.position.maxScrollExtent,
+    );
+    _trackScrollController.animateTo(
+      target,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  void _scrollTracksDown() {
+    if (!_trackScrollController.hasClients) return;
+    final target = (_trackScrollController.offset + 260).clamp(
+      0.0,
+      _trackScrollController.position.maxScrollExtent,
+    );
+    _trackScrollController.animateTo(
+      target,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   // Play/Pause toggle
@@ -315,33 +342,43 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                     const HomeScreenHeader(),
 
-                    SizedBox(height: size.height * 0.08),
-
-                    ControlButtons(
-                      isTimerMode: _isTimerMode,
-                      onContinuousTap: () {
-                        print('DEBUG: Continuous button tapped!');
-                        if (_isTimerMode) _toggleTimerMode();
-                      },
-                      onTimerTap: () {
-                        print('DEBUG: Timer button tapped!');
-                        _showTimerModal();
-                      },
-                    ),
-
-                    SizedBox(height: size.height * 0.02),
+                  SizedBox(height: size.height * 0.04),
 
                     Expanded(
-                      child: TrackListWidget(
-                        tracks: _tracks,
-                        selectedTrackIndex: _selectedTrackIndex,
-                        isPlaying: _isPlaying,
-                        isPaused: _isPaused,
-                        isFirstLaunch: _isFirstLaunch,
-                        isTimerMode: _isTimerMode,
-                        remainingTime: _remainingTime,
-                        blinkAnimation: _blinkAnimation,
-                        onTrackTap: _togglePlayPause,
+                      child: Stack(
+                        children: [
+                          TrackListWidget(
+                            tracks: _tracks,
+                            scrollController: _trackScrollController,
+                            selectedTrackIndex: _selectedTrackIndex,
+                            isPlaying: _isPlaying,
+                            isPaused: _isPaused,
+                            isFirstLaunch: _isFirstLaunch,
+                            isTimerMode: _isTimerMode,
+                            remainingTime: _remainingTime,
+                            blinkAnimation: _blinkAnimation,
+                            onTrackTap: _togglePlayPause,
+                          ),
+                          Positioned(
+                            left: 34,
+                            top: 2,
+                            child: _ListScrollControl(
+                              label: 'top',
+                              icon: Icons.change_history,
+                              onTap: _scrollTracksUp,
+                            ),
+                          ),
+                          Positioned(
+                            left: 34,
+                            bottom: 4,
+                            child: _ListScrollControl(
+                              label: 'more',
+                              icon: Icons.change_history,
+                              flipIcon: true,
+                              onTap: _scrollTracksDown,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
 
@@ -388,6 +425,46 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _ListScrollControl extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool flipIcon;
+  final VoidCallback onTap;
+
+  const _ListScrollControl({
+    required this.label,
+    required this.icon,
+    this.flipIcon = false,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    const markerColor = Color(0xFFC7F535);
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Transform.rotate(
+            angle: flipIcon ? 3.14159 : 0,
+            child: Icon(icon, color: markerColor, size: 16),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Kallisto',
+              fontSize: 14,
+              color: Colors.white.withOpacity(0.5),
+              letterSpacing: 0.4,
+            ),
+          ),
+        ],
       ),
     );
   }

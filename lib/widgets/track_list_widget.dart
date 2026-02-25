@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class TrackListWidget extends StatelessWidget {
   final List<Map<String, String>> tracks;
+  final ScrollController scrollController;
   final int selectedTrackIndex;
   final bool isPlaying;
   final bool isPaused;
@@ -14,6 +15,7 @@ class TrackListWidget extends StatelessWidget {
   const TrackListWidget({
     super.key,
     required this.tracks,
+    required this.scrollController,
     required this.selectedTrackIndex,
     required this.isPlaying,
     required this.isPaused,
@@ -34,7 +36,8 @@ class TrackListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      // padding: const EdgeInsets.only(left: 18, right: 18),
+      controller: scrollController,
+      padding: const EdgeInsets.fromLTRB(18, 28, 18, 34),
       itemCount: tracks.length,
       itemBuilder: (context, index) {
         bool isSelected = selectedTrackIndex == index;
@@ -67,7 +70,7 @@ class TrackListWidget extends StatelessWidget {
           onTap: () => onTrackTap(index),
           child: Container(
             margin: const EdgeInsets.only(bottom: 8.0),
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 34),
             decoration: BoxDecoration(
               color: isSelected
                   ? Colors.white.withOpacity(0.15)

@@ -383,8 +383,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
 
                     BottomBar(
-                      volume: _volume,
-                      onVolumeChanged: _changeVolume,
                       onSettingsTap: _openSettingsModal,
                     ),
                   ],

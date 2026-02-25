@@ -260,16 +260,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/tinnitus_bg.png'),
-              fit: BoxFit.cover,
-            ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/tinnitus_bg.png'),
+            fit: BoxFit.cover,
           ),
-          child: Stack(
-            children: [
+        ),
+        child: Stack(
+          children: [
 
               // 1?? Background image
               Positioned.fill(
@@ -309,48 +308,50 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               ),
 
               // 4?? Main content
-              Column(
-                children: [
-                  SizedBox(height: size.height * 0.005),
+              SafeArea(
+                child: Column(
+                  children: [
+                    SizedBox(height: size.height * 0.005),
 
-                  const HomeScreenHeader(),
+                    const HomeScreenHeader(),
 
-                  SizedBox(height: size.height * 0.08),
+                    SizedBox(height: size.height * 0.08),
 
-                  ControlButtons(
-                    isTimerMode: _isTimerMode,
-                    onContinuousTap: () {
-                      print('DEBUG: Continuous button tapped!');
-                      if (_isTimerMode) _toggleTimerMode();
-                    },
-                    onTimerTap: () {
-                      print('DEBUG: Timer button tapped!');
-                      _showTimerModal();
-                    },
-                  ),
-
-                  SizedBox(height: size.height * 0.02),
-
-                  Expanded(
-                    child: TrackListWidget(
-                      tracks: _tracks,
-                      selectedTrackIndex: _selectedTrackIndex,
-                      isPlaying: _isPlaying,
-                      isPaused: _isPaused,
-                      isFirstLaunch: _isFirstLaunch,
+                    ControlButtons(
                       isTimerMode: _isTimerMode,
-                      remainingTime: _remainingTime,
-                      blinkAnimation: _blinkAnimation,
-                      onTrackTap: _togglePlayPause,
+                      onContinuousTap: () {
+                        print('DEBUG: Continuous button tapped!');
+                        if (_isTimerMode) _toggleTimerMode();
+                      },
+                      onTimerTap: () {
+                        print('DEBUG: Timer button tapped!');
+                        _showTimerModal();
+                      },
                     ),
-                  ),
 
-                  BottomBar(
-                    volume: _volume,
-                    onVolumeChanged: _changeVolume,
-                    onSettingsTap: _openSettingsModal,
-                  ),
-                ],
+                    SizedBox(height: size.height * 0.02),
+
+                    Expanded(
+                      child: TrackListWidget(
+                        tracks: _tracks,
+                        selectedTrackIndex: _selectedTrackIndex,
+                        isPlaying: _isPlaying,
+                        isPaused: _isPaused,
+                        isFirstLaunch: _isFirstLaunch,
+                        isTimerMode: _isTimerMode,
+                        remainingTime: _remainingTime,
+                        blinkAnimation: _blinkAnimation,
+                        onTrackTap: _togglePlayPause,
+                      ),
+                    ),
+
+                    BottomBar(
+                      volume: _volume,
+                      onVolumeChanged: _changeVolume,
+                      onSettingsTap: _openSettingsModal,
+                    ),
+                  ],
+                ),
               ),
 
               // 5?? Volume bar
@@ -380,8 +381,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );

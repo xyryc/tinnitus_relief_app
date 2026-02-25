@@ -373,9 +373,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     letterSpacing: 1.2,
                     shadows: const [
                       Shadow(
-                        offset: Offset(0, 1),
-                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                        blurRadius: 8,
                         color: Colors.black45,
+                      ),
+                      Shadow(
+                        offset: Offset(0, 0),
+                        blurRadius: 14,
+                        color: Colors.black38,
                       ),
                     ],
                   ),

@@ -32,9 +32,14 @@ class HomeScreenHeader extends StatelessWidget {
                         letterSpacing: 1,
                         shadows: [
                           Shadow(
-                            offset: Offset(0, 1),
-                            blurRadius: 2,
-                            color: Colors.black45,
+                            offset: Offset(0, 2),
+                            blurRadius: 10,
+                            color: Colors.black54,
+                          ),
+                          Shadow(
+                            offset: Offset(0, 0),
+                            blurRadius: 18,
+                            color: Colors.black38,
                           ),
                         ],
                       ),
@@ -52,9 +57,14 @@ class HomeScreenHeader extends StatelessWidget {
                         letterSpacing: 1,
                         shadows: [
                           Shadow(
-                            offset: Offset(0, 1),
-                            blurRadius: 2,
-                            color: Colors.black45,
+                            offset: Offset(0, 2),
+                            blurRadius: 10,
+                            color: Colors.black54,
+                          ),
+                          Shadow(
+                            offset: Offset(0, 0),
+                            blurRadius: 18,
+                            color: Colors.black38,
                           ),
                         ],
                       ),
@@ -79,9 +89,14 @@ class HomeScreenHeader extends StatelessWidget {
                      letterSpacing: 1,
                      shadows: [
                        Shadow(
-                         offset: Offset(0, 1),
-                         blurRadius: 2,
+                         offset: Offset(0, 2),
+                         blurRadius: 8,
                          color: Colors.black45,
+                       ),
+                       Shadow(
+                         offset: Offset(0, 0),
+                         blurRadius: 14,
+                         color: Colors.black38,
                        ),
                      ],
                    ),
@@ -95,36 +110,25 @@ class HomeScreenHeader extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: "Kallisto",
                           fontWeight: FontWeight.w400,
-                          fontSize: 12,
+                          fontSize: 14,
                           color: Colors.white,
                           letterSpacing: 1,
                           shadows: [
                             Shadow(
-                              offset: Offset(0, 1),
-                              blurRadius: 2,
+                              offset: Offset(0, 2),
+                              blurRadius: 8,
                               color: Colors.black45,
+                            ),
+                            Shadow(
+                              offset: Offset(0, 0),
+                              blurRadius: 14,
+                              color: Colors.black38,
                             ),
                           ],
                         ),
                       ),
 
-                      Text(
-                        '.org',
-                        style: TextStyle(
-                          fontFamily: "Kallisto",
-                          fontWeight: FontWeight.w300,
-                          fontSize: 10,
-                          color: Colors.white,
-                          letterSpacing: 1.5,
-                          shadows: [
-                            Shadow(
-                              offset: Offset(0, 1),
-                              blurRadius: 2,
-                              color: Colors.black45,
-                            ),
-                          ],
-                        ),
-                      )
+                      
                     ],
                   )
                ]

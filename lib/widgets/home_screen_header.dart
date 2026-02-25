@@ -76,7 +76,7 @@ class HomeScreenHeader extends StatelessWidget {
               // const SizedBox(height: 4),
 
              Row(
-                 spacing: 3,
+                 spacing: 4,
                  crossAxisAlignment: CrossAxisAlignment.center,
                  children: [
                  Text(
@@ -105,26 +105,29 @@ class HomeScreenHeader extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(
-                        'earvana',
-                        style: TextStyle(
-                          fontFamily: "Kallisto",
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                          color: Colors.white,
-                          letterSpacing: 1,
-                          shadows: [
-                            Shadow(
-                              offset: Offset(0, 2),
-                              blurRadius: 8,
-                              color: Colors.black45,
-                            ),
-                            Shadow(
-                              offset: Offset(0, 0),
-                              blurRadius: 14,
-                              color: Colors.black38,
-                            ),
-                          ],
+                      Transform.translate(
+                        offset: const Offset(0, -2),
+                        child: Text(
+                          'earvana',
+                          style: TextStyle(
+                            fontFamily: "Kallisto",
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                            color: Colors.white,
+                            letterSpacing: 1,
+                            shadows: [
+                              Shadow(
+                                offset: Offset(0, 2),
+                                blurRadius: 8,
+                                color: Colors.black45,
+                              ),
+                              Shadow(
+                                offset: Offset(0, 0),
+                                blurRadius: 14,
+                                color: Colors.black38,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
 

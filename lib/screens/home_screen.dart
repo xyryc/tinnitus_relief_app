@@ -363,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               // 6?? Positioned tagline
               Positioned(
                 right: size.width * 0.05,
-                top: size.height * 0.10,
+                top: size.height * 0.110,
                 child: Text(
                   'the professional masking solution',
                   style: TextStyle(

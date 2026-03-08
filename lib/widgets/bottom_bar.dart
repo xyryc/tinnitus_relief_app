@@ -100,12 +100,12 @@ class BottomBar extends StatelessWidget {
                 ),
                 SizedBox(height: size.height * 0.001),
                 SizedBox(
-                  height: size.height * 0.03,
+                  height: size.height * 0.036,
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
                       Container(
-                        height: 8,
+                        height: 7,
                         margin: EdgeInsets.symmetric(horizontal: size.width * 0.09),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(6),
@@ -130,7 +130,7 @@ class BottomBar extends StatelessWidget {
                       ),
                       SliderTheme(
                         data: SliderTheme.of(context).copyWith(
-                          trackHeight: 10,
+                          trackHeight: 8,
                           activeTrackColor: Colors.transparent,
                           inactiveTrackColor: Colors.transparent,
                           overlayShape: SliderComponentShape.noOverlay,
@@ -141,6 +141,7 @@ class BottomBar extends StatelessWidget {
                           min: 1,
                           max: 10,
                           divisions: 9,
+                          padding: EdgeInsets.symmetric(horizontal: size.width * 0.09),
                           onChanged: onDurationChanged,
                         ),
                       ),
@@ -242,7 +243,7 @@ class _MetalThumbShape extends SliderComponentShape {
   const _MetalThumbShape();
 
   @override
-  Size getPreferredSize(bool isEnabled, bool isDiscrete) => const Size(18, 28);
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) => const Size(16, 24);
 
   @override
   void paint(
@@ -260,7 +261,7 @@ class _MetalThumbShape extends SliderComponentShape {
     required Size sizeWithOverflow,
   }) {
     final canvas = context.canvas;
-    final rect = Rect.fromCenter(center: center, width: 18, height: 28);
+    final rect = Rect.fromCenter(center: center, width: 16, height: 24);
     final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(2.5));
     final fill = Paint()
       ..shader = const LinearGradient(
@@ -281,7 +282,7 @@ class _MetalThumbShape extends SliderComponentShape {
 
     canvas.drawRRect(rrect, fill);
     canvas.drawRRect(rrect, outline);
-    canvas.drawRect(Rect.fromCenter(center: center.translate(-2.8, 0), width: 1.2, height: 22), groove);
-    canvas.drawRect(Rect.fromCenter(center: center.translate(2.8, 0), width: 1.2, height: 22), groove);
+    canvas.drawRect(Rect.fromCenter(center: center.translate(-2.4, 0), width: 1.1, height: 18), groove);
+    canvas.drawRect(Rect.fromCenter(center: center.translate(2.4, 0), width: 1.1, height: 18), groove);
   }
 }

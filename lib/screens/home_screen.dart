@@ -282,6 +282,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _audioPlayer.setVolume(_volume);
   }
 
+  void _changeDurationHours(double value) {
+    final hours = value.round().clamp(1, 10);
+    final duration = Duration(hours: hours);
+    setState(() {
+      _timerDuration = duration;
+      if (!_isTimerMode || !_isPlaying) {
+        _remainingTime = duration;
+      }
+    });
+  }
+
+  void _handlePrimaryControlTap() {
+    final trackIndex = _selectedTrackIndex >= 0 ? _selectedTrackIndex : 0;
+    _togglePlayPause(trackIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -383,6 +399,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
 
                     BottomBar(
+                      isPlaying: _isPlaying,
+                      duration: _timerDuration,
+                      onPrimaryTap: _handlePrimaryControlTap,
+                      onDurationChanged: _changeDurationHours,
                       onSettingsTap: _openSettingsModal,
                     ),
                   ],

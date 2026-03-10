@@ -17,8 +17,8 @@ class VolumeBar extends StatelessWidget {
 
     return Positioned(
       right: size.width * 0.018,
-      top: size.height * 0.46,
-      bottom: size.height * 0.145,
+      top: size.height * 0.43,
+      bottom: size.height * 0.175,
       child: Row(
         children: [
           // Vertical "volume" label
@@ -31,7 +31,7 @@ class VolumeBar extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'Kallisto',
                   color: Colors.white,
-                  fontSize: 10,
+                  fontSize: 14,
                   height: 2.2,
                   letterSpacing: 0.3
                 ),

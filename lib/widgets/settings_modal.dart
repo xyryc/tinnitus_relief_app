@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'chamfer_clipper.dart';
 
 class SettingsModal extends StatelessWidget {
   final String activeOutputDevice;
@@ -22,8 +23,8 @@ class SettingsModal extends StatelessWidget {
           children: [
             // Center glass panel
             Center(
-              child: ClipPath(
-                clipper: _ChamferClipper(
+                child: ClipPath(
+                clipper: ChamferClipper(
                   topLeft: 18,
                   topRight: 32,
                   bottomLeft: 32,
@@ -364,50 +365,6 @@ class _LegalLinks extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-/// Chamfer (cut) corners clipper to match the angled corners in the design.
-class _ChamferClipper extends CustomClipper<Path> {
-  final double topLeft;
-  final double topRight;
-  final double bottomLeft;
-  final double bottomRight;
-
-  _ChamferClipper({
-    required this.topLeft,
-    required this.topRight,
-    required this.bottomLeft,
-    required this.bottomRight,
-  });
-
-  @override
-  Path getClip(Size s) {
-    final p = Path();
-
-    // Start top-left with chamfer
-    p.moveTo(topLeft, 0);
-    p.lineTo(s.width - topRight, 0);
-    p.lineTo(s.width, topRight);
-
-    p.lineTo(s.width, s.height - bottomRight);
-    p.lineTo(s.width - bottomRight, s.height);
-
-    p.lineTo(bottomLeft, s.height);
-    p.lineTo(0, s.height - bottomLeft);
-
-    p.lineTo(0, topLeft);
-    p.close();
-
-    return p;
-  }
-
-  @override
-  bool shouldReclip(covariant _ChamferClipper oldClipper) {
-    return topLeft != oldClipper.topLeft ||
-        topRight != oldClipper.topRight ||
-        bottomLeft != oldClipper.bottomLeft ||
-        bottomRight != oldClipper.bottomRight;
   }
 }
 

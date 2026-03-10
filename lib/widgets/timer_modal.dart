@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dart:async';
+import 'chamfer_clipper.dart';
 
 class TimerModal extends StatefulWidget {
   final Duration initialDuration;
@@ -110,11 +111,11 @@ class _TimerModalState extends State<TimerModal> {
     return SafeArea(
       child: Material(
         type: MaterialType.transparency,
-        child: Stack(
-          children: [
+          child: Stack(
+            children: [
             Center(
               child: ClipPath(
-                clipper: _ChamferClipper(
+                clipper: ChamferClipper(
                   topLeft: 18,
                   topRight: 32,
                   bottomLeft: 32,
@@ -699,50 +700,6 @@ class ClockPainter extends CustomPainter {
   @override
   bool shouldRepaint(ClockPainter oldDelegate) {
     return oldDelegate.time != time;
-  }
-}
-
-// Chamfer clipper for cut corners (matching settings modal)
-class _ChamferClipper extends CustomClipper<Path> {
-  final double topLeft;
-  final double topRight;
-  final double bottomLeft;
-  final double bottomRight;
-
-  _ChamferClipper({
-    required this.topLeft,
-    required this.topRight,
-    required this.bottomLeft,
-    required this.bottomRight,
-  });
-
-  @override
-  Path getClip(Size s) {
-    final p = Path();
-
-    // Start top-left with chamfer
-    p.moveTo(topLeft, 0);
-    p.lineTo(s.width - topRight, 0);
-    p.lineTo(s.width, topRight);
-
-    p.lineTo(s.width, s.height - bottomRight);
-    p.lineTo(s.width - bottomRight, s.height);
-
-    p.lineTo(bottomLeft, s.height);
-    p.lineTo(0, s.height - bottomLeft);
-
-    p.lineTo(0, topLeft);
-    p.close();
-
-    return p;
-  }
-
-  @override
-  bool shouldReclip(covariant _ChamferClipper oldClipper) {
-    return topLeft != oldClipper.topLeft ||
-        topRight != oldClipper.topRight ||
-        bottomLeft != oldClipper.bottomLeft ||
-        bottomRight != oldClipper.bottomRight;
   }
 }
 

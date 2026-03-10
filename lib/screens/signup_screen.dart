@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tinnitus_relief/screens/home_screen.dart';
 import 'package:tinnitus_relief/screens/login_screen.dart';
+import 'package:tinnitus_relief/widgets/auth_brand_header.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -126,7 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         // Logo/Title Section
-                        _buildHeader(),
+                        const AuthBrandHeader(),
 
                         const SizedBox(height: 40),
 
@@ -141,55 +142,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  // Header with app title
-  Widget _buildHeader() {
-    return Column(
-      children: [
-        // App Title
-        RichText(
-          textAlign: TextAlign.start,
-          text: const TextSpan(
-            style: TextStyle(
-              fontFamily: 'Kallisto',
-              fontSize: 42,
-              fontWeight: FontWeight.bold,
-            ),
-            children: [
-              TextSpan(
-                text: 'tinnitus',
-                style: TextStyle(color: Colors.white),
-              ),
-              TextSpan(
-                text: 'relief',
-                style: TextStyle(color: Color(0xFF64B5F6)),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'professional masking solution',
-          style: TextStyle(
-            fontFamily: 'Kallisto',
-            fontSize: 14,
-            color: Colors.white70,
-            letterSpacing: 1.5,
-          ),
-        ),
-        const SizedBox(height: 4),
-        const Text(
-          'earvana.org',
-          style: TextStyle(
-            fontFamily: 'Kallisto',
-            fontSize: 12,
-            color: Color(0xFF64B5F6),
-            letterSpacing: 1.2,
-          ),
-        ),
-      ],
     );
   }
 

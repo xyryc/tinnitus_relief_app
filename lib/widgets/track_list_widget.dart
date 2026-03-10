@@ -116,16 +116,8 @@ class TrackListWidget extends StatelessWidget {
                   ),
                 ),
 
-                // Loop icon and timer (only for selected track)
+                // Timer text (only for selected track)
                 if (isSelected && isPlaying) ...[ 
-                  Icon(
-                    Icons.loop,
-                    color: Colors.white70,
-                    size: 20,
-                  ),
-
-                  const SizedBox(width: 26),
-
                   if (isTimerMode)
                     Text(
                       _formatDuration(remainingTime),

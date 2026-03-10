@@ -19,8 +19,9 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final sliderValue = duration.inHours.clamp(1, 10).toDouble();
-    final timerText = '${duration.inHours}:00';
+    final isInfinite = duration == Duration.zero;
+    final sliderValue = isInfinite ? 11.0 : duration.inHours.clamp(1, 10).toDouble();
+    final timerText = isInfinite ? '∞' : '${duration.inHours}:00';
 
     return Container(
       decoration: BoxDecoration(
@@ -48,14 +49,16 @@ class BottomBar extends StatelessWidget {
           GestureDetector(
             onTap: onPrimaryTap,
             child: SizedBox(
-              width: size.width * 0.13,
-              height: size.width * 0.13,
+              width: 40,
+              height: 40,
               child: CustomPaint(
                 painter: _PlayButtonPainter(isPlaying: isPlaying),
               ),
             ),
           ),
-          SizedBox(width: size.width * 0.03),
+
+          SizedBox(width: 2),
+
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -76,29 +79,42 @@ class BottomBar extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 SizedBox(height: size.height * 0.002),
+                
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(10, (index) {
+                  children: List.generate(11, (index) {
+                    final isLast = index == 10;
                     final number = index + 1;
                     final isSelected = number == sliderValue.round();
                     return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: size.width * 0.006),
-                      child: Text(
-                        '$number',
-                        style: TextStyle(
-                          fontFamily: 'Kallisto',
-                          fontSize: size.width * 0.017,
-                          color: isSelected
-                              ? const Color(0xFF8CFF31)
-                              : Colors.white.withOpacity(0.48),
-                          fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
-                        ),
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 6),
+                      child: isLast
+                          ? Icon(
+                              Icons.all_inclusive,
+                              size: 18,
+                              color: isSelected
+                                  ? const Color(0xFF00FF5A)
+                                  : Colors.white.withOpacity(0.48),
+                            )
+                          : Text(
+                              '$number',
+                              style: TextStyle(
+                                fontFamily: 'Kallisto',
+                                fontSize: 14,
+                                color: isSelected
+                                    ? const Color(0xFF8CFF31)
+                                    : Colors.white.withOpacity(0.48),
+                                fontWeight: isSelected ? FontWeight.w500 : FontWeight.w300,
+                              ),
+                            ),
                     );
                   }),
                 ),
+
                 SizedBox(height: size.height * 0.001),
+
                 SizedBox(
                   height: size.height * 0.036,
                   child: Stack(
@@ -139,8 +155,8 @@ class BottomBar extends StatelessWidget {
                         child: Slider(
                           value: sliderValue,
                           min: 1,
-                          max: 10,
-                          divisions: 9,
+                          max: 11,
+                          divisions: 10,
                           padding: EdgeInsets.symmetric(horizontal: size.width * 0.09),
                           onChanged: onDurationChanged,
                         ),
@@ -148,6 +164,7 @@ class BottomBar extends StatelessWidget {
                     ],
                   ),
                 ),
+                
                 Transform.translate(
                   offset: const Offset(0, -3),
                   child: Text(
@@ -163,7 +180,9 @@ class BottomBar extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: size.width * 0.025),
+
+          SizedBox(width: 2),
+
           GestureDetector(
             onTap: onSettingsTap,
             child: Image.asset(

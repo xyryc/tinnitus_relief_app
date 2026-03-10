@@ -189,6 +189,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   // Timer functionality
   void _startTimer() {
     _timer?.cancel();
+    if (_timerDuration == Duration.zero) {
+      return;
+    }
     setState(() {
       _remainingTime = _timerDuration;
     });
@@ -283,11 +286,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   }
 
   void _changeDurationHours(double value) {
-    final hours = value.round().clamp(1, 10);
-    final duration = Duration(hours: hours);
+    final selected = value.round().clamp(1, 11);
+    final isInfinite = selected == 11;
+    final duration = isInfinite ? Duration.zero : Duration(hours: selected);
     setState(() {
       _timerDuration = duration;
-      if (!_isTimerMode || !_isPlaying) {
+      _isTimerMode = !isInfinite;
+      if (isInfinite) {
+        _timer?.cancel();
+        _remainingTime = Duration.zero;
+      } else if (!_isTimerMode || !_isPlaying) {
         _remainingTime = duration;
       }
     });

@@ -7,17 +7,11 @@ class PlayButtonPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final shadowPaint = Paint()
-      ..color = Colors.black.withOpacity(0.38)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
-
     final outerPath = Path()
       ..moveTo(size.width * 0.12, size.height * 0.12)
       ..lineTo(size.width * 0.12, size.height * 0.88)
       ..lineTo(size.width * 0.88, size.height * 0.5)
       ..close();
-
-    canvas.drawPath(outerPath.shift(const Offset(4, 4)), shadowPaint);
 
     final fillPaint = Paint()
       ..shader = const LinearGradient(

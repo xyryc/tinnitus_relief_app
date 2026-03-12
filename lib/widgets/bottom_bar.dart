@@ -49,11 +49,12 @@ class BottomBar extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: onPrimaryTap,
-            child: SizedBox(
-              width: 40,
-              height: 40,
-              child: CustomPaint(
-                painter: PlayButtonPainter(isPlaying: isPlaying),
+            child: Opacity(
+              opacity: isPlaying ? 1.0 : 0.55,
+              child: const Icon(
+                Icons.play_arrow_rounded,
+                size: 42,
+                color: Color(0xFF17FF2E),
               ),
             ),
           ),

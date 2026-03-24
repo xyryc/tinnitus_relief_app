@@ -26,7 +26,7 @@ class TrackListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       controller: scrollController,
-      padding: const EdgeInsets.fromLTRB(18, 28, 18, 34),
+      padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
       itemCount: tracks.length,
       itemBuilder: (context, index) {
         bool isSelected = selectedTrackIndex == index;

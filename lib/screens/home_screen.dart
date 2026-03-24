@@ -375,19 +375,22 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     Expanded(
                       child: Stack(
                         children: [
-                          TrackListWidget(
-                            tracks: _tracks,
-                            scrollController: _trackScrollController,
-                            selectedTrackIndex: _selectedTrackIndex,
-                            isPlaying: _isPlaying,
-                            isPaused: _isPaused,
-                            isFirstLaunch: _isFirstLaunch,
-                            blinkAnimation: _blinkAnimation,
-                            onTrackTap: _togglePlayPause,
+                          Padding(
+                            padding: const EdgeInsets.only(top: 44, bottom: 44),
+                            child: TrackListWidget(
+                              tracks: _tracks,
+                              scrollController: _trackScrollController,
+                              selectedTrackIndex: _selectedTrackIndex,
+                              isPlaying: _isPlaying,
+                              isPaused: _isPaused,
+                              isFirstLaunch: _isFirstLaunch,
+                              blinkAnimation: _blinkAnimation,
+                              onTrackTap: _togglePlayPause,
+                            ),
                           ),
                           Positioned(
-                            left: 34,
-                            top: 2,
+                            left: 44,
+                            top: 10,
                             child: ListScrollControl(
                               label: 'top',
                               icon: Icons.change_history,
@@ -395,8 +398,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             ),
                           ),
                           Positioned(
-                            left: 34,
-                            bottom: 4,
+                            left: 44,
+                            bottom: 12,
                             child: ListScrollControl(
                               label: 'more',
                               icon: Icons.change_history,

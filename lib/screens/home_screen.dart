@@ -324,7 +324,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
         child: Stack(
           children: [
-
               // 1?? Background image
               Positioned.fill(
                 child: Image.asset(
@@ -340,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 right: 0,
                 child: Image.asset(
                   "assets/images/top_vector.png",
-                  height: size.height * 0.18,
+                  height: size.height * 0.20,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -431,32 +430,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 onVolumeChanged: _changeVolume,
               ),
 
-              // 6?? Positioned tagline
-              Positioned(
-                right: size.width * 0.05,
-                top: size.height * 0.110,
-                child: Text(
-                  'the professional masking solution',
-                  style: TextStyle(
-                    fontFamily: "Kallisto",
-                    fontSize: 12,
-                    color: Colors.white,
-                    letterSpacing: 1.2,
-                    shadows: const [
-                      Shadow(
-                        offset: Offset(0, 2),
-                        blurRadius: 8,
-                        color: Colors.black45,
-                      ),
-                      Shadow(
-                        offset: Offset(0, 0),
-                        blurRadius: 14,
-                        color: Colors.black38,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
           ],
         ),
       ),

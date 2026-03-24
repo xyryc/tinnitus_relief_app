@@ -3,7 +3,8 @@ import 'bottom_bar_painters.dart';
 
 class BottomBar extends StatelessWidget {
   final bool isPlaying;
-  final Duration duration;
+  final Duration selectedDuration;
+  final Duration displayDuration;
   final VoidCallback onPrimaryTap;
   final ValueChanged<double> onDurationChanged;
   final VoidCallback onSettingsTap;
@@ -11,18 +12,25 @@ class BottomBar extends StatelessWidget {
   const BottomBar({
     super.key,
     required this.isPlaying,
-    required this.duration,
+    required this.selectedDuration,
+    required this.displayDuration,
     required this.onPrimaryTap,
     required this.onDurationChanged,
     required this.onSettingsTap,
   });
 
+  String _formatTimer(Duration duration) {
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+    return '$hours:$minutes';
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final isInfinite = duration == Duration.zero;
-    final sliderValue = isInfinite ? 11.0 : duration.inHours.clamp(1, 10).toDouble();
-    final timerText = isInfinite ? '∞' : '${duration.inHours}:00';
+    final isInfinite = selectedDuration == Duration.zero;
+    final sliderValue = isInfinite ? 11.0 : selectedDuration.inHours.clamp(1, 10).toDouble();
+    final timerText = isInfinite ? '\u221E' : _formatTimer(displayDuration);
 
     return Container(
       decoration: BoxDecoration(

@@ -7,8 +7,6 @@ class TrackListWidget extends StatelessWidget {
   final bool isPlaying;
   final bool isPaused;
   final bool isFirstLaunch;
-  final bool isTimerMode;
-  final Duration remainingTime;
   final Animation<double> blinkAnimation;
   final Function(int) onTrackTap;
 
@@ -20,18 +18,9 @@ class TrackListWidget extends StatelessWidget {
     required this.isPlaying,
     required this.isPaused,
     required this.isFirstLaunch,
-    required this.isTimerMode,
-    required this.remainingTime,
     required this.blinkAnimation,
     required this.onTrackTap,
   });
-
-  String _formatDuration(Duration duration) {
-    int hours = duration.inHours;
-    int minutes = duration.inMinutes.remainder(60);
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    return '$hours:${twoDigits(minutes)}';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,20 +105,6 @@ class TrackListWidget extends StatelessWidget {
                   ),
                 ),
 
-                // Timer text (only for selected track)
-                if (isSelected && isPlaying) ...[ 
-                  if (isTimerMode)
-                    Text(
-                      _formatDuration(remainingTime),
-                      style: TextStyle(
-                        fontFamily: "Kallisto",
-                        fontSize: 18,
-                        color: const Color(0xFF7FFF00),
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.0,
-                      ),
-                    ),
-                ],
               ],
             ),
           ),

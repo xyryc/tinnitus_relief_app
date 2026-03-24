@@ -296,10 +296,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       if (isInfinite) {
         _timer?.cancel();
         _remainingTime = Duration.zero;
-      } else if (!_isTimerMode || !_isPlaying) {
+      } else {
         _remainingTime = duration;
       }
     });
+    if (!isInfinite && _isPlaying) {
+      _startTimer();
+    }
   }
 
   void _handlePrimaryControlTap() {
@@ -379,8 +382,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             isPlaying: _isPlaying,
                             isPaused: _isPaused,
                             isFirstLaunch: _isFirstLaunch,
-                            isTimerMode: _isTimerMode,
-                            remainingTime: _remainingTime,
                             blinkAnimation: _blinkAnimation,
                             onTrackTap: _togglePlayPause,
                           ),
@@ -409,7 +410,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                     BottomBar(
                       isPlaying: _isPlaying,
-                      duration: _timerDuration,
+                      selectedDuration: _timerDuration,
+                      displayDuration: (_isPlaying && _isTimerMode)
+                          ? _remainingTime
+                          : _timerDuration,
                       onPrimaryTap: _handlePrimaryControlTap,
                       onDurationChanged: _changeDurationHours,
                       onSettingsTap: _openSettingsModal,

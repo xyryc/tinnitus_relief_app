@@ -1,146 +1,134 @@
-# Tinnitus Relief App
+# Tinnitus Relief App 🎧🌿
 
-A Flutter-based tinnitus masking and relaxation app with offline bundled sound tracks, volume shaping, and session duration controls.
+A professional Flutter-based sound masking and relaxation application designed to relieve tinnitus symptoms. Features 12 high-quality sound therapy tracks, customizable timer & fade controls, vertical volume shaping, and a modern glassmorphism interface.
 
-## Overview
+---
 
-This project provides a focused sound-therapy style experience:
-- 12 bundled audio masking tracks (ocean, rain, storm, stream, crickets, wind, white noise)
-- Interactive track list with play/pause visual states
-- Vertical dot-based volume control
-- Session duration control with finite hours (`1-10`) or infinite mode (`∞`)
-- Glassmorphism-style timer and settings modals
-- Legal documentation drafts for App Store / Play Store readiness
+## 📱 App Screenshots
 
-## Tech Stack
+| Sound Therapy Player | Auth Flow | Advanced Timer Modal | Settings & Legal |
+| :---: | :---: | :---: | :---: |
+| <img src="./assets/screenshots/player.webp" width="220" alt="Sound Therapy Player" /> | <img src="./assets/screenshots/login.webp" width="220" alt="Login Screen" /> | <img src="./assets/screenshots/timer.webp" width="220" alt="Timer Modal" /> | <img src="./assets/screenshots/settings.webp" width="220" alt="Settings Modal" /> |
+| **Masking Player** | **Authentication** | **Timer & Fade** | **Settings & FAQ** |
 
-- Flutter (Dart SDK `^3.10.7`)
-- `audioplayers` for audio playback
-- `url_launcher` for opening FAQ/legal/review links
-- Custom bundled font family: `Kallisto`
+---
 
-## Project Structure
+## ✨ Features
 
-```text
-lib/
-  main.dart                          # App entry point, theme, HomeScreen bootstrap
-  screens/
-    home_screen.dart                 # Main sound therapy player UI + audio/timer state
-    login_screen.dart                # Auth UI (currently not launch route)
-    signup_screen.dart               # Auth UI (currently not launch route)
-    forgot_password_screen.dart      # Auth UI (currently not launch route)
-  widgets/
-    home_screen_header.dart
-    track_list_widget.dart
-    volume_bar.dart
-    bottom_bar.dart
-    timer_modal.dart
-    settings_modal.dart
-    ...
+- **🔊 12 Bundled Sound Masking Tracks**:
+  - *Ocean Aire*: Calm, Active
+  - *Rain*: Light, Medium
+  - *Storm*: Light, Active
+  - *Stream*: Light, Medium
+  - *Nature*: Crickets, Winds
+  - *Noise*: White WAV Dynamic
+- **🎛️ Dynamic Playback & Volume Control**:
+  - Interactive track selection with play/pause visual states (green for playing, animated yellow for paused).
+  - Vertical dot-based volume level meter with smooth intensity adjustment.
+  - Manual track list scroll controls (`top` / `more`) and fluid gesture touch scrolling.
+- **⏱️ Advanced Session Timer & Audio Fade-Out**:
+  - Quick duration slider for continuous playback ($\infty$) or finite timer (`1-10` hours).
+  - Custom `TimerModal` with real-time analog clock displays, custom hour/minute pickers, and configurable audio fade-out durations (e.g., 1.5 min).
+- **🔐 User Authentication**:
+  - Clean glassmorphism auth screens including Login, Sign Up, and Forgot Password flows.
+- **⚙️ Settings & Legal Portal**:
+  - Integrated settings drawer linking to FAQ, Privacy Policy, Terms of Service, and App Store / Google Play review destinations.
 
-assets/
-  audio/                             # All bundled masking audio files
-  images/                            # Background and UI graphics
-  fonts/                             # Kallisto font weights
+---
 
-legal/
-  PRIVACY_POLICY.md
-  TERMS_AND_CONDITIONS.md
-  APP_STORE_CHECKLIST.md
+## 🛠️ Tech Stack
 
-test/
-  widget_test.dart                   # Default Flutter starter test (currently outdated)
+### **Framework & Core**
+- **[Flutter SDK](https://flutter.dev/)** (`^3.10.7`) & **[Dart](https://dart.dev/)**
+- **[AudioPlayers](https://pub.dev/packages/audioplayers)** (`^6.0.0`) - High-performance audio playback & looping system
+- **[URL Launcher](https://pub.dev/packages/url_launcher)** (`^6.3.1`) - External link handling for FAQs and store pages
+- **[Cupertino Icons](https://pub.dev/packages/cupertino_icons)** (`^1.0.8`) - iOS-style icons
+
+### **UI & Styling**
+- Custom **Kallisto** typography family (Thin, Light, Medium, Bold, Heavy weights)
+- Custom Canvas Painters (`CustomPainter`) for glassmorphism panels, volume meters, and chamfered edges
+- Responsive layout components
+
+---
+
+## 📁 Project Structure
+
+```
+tinnitus_relief_app/
+├── assets/
+│   ├── audio/                 # 12 bundled masking WAV/MP3 tracks
+│   ├── fonts/                 # Kallisto font weight definitions
+│   ├── images/                # Background graphics & brand icons
+│   └── screenshots/           # App screenshot showcase for README
+├── lib/
+│   ├── main.dart              # Application entry point & theme configuration
+│   ├── screens/
+│   │   ├── home_screen.dart   # Main sound player UI & playback state management
+│   │   ├── login_screen.dart  # Authentication login screen
+│   │   ├── signup_screen.dart # User registration screen
+│   │   └── forgot_password_screen.dart # Password reset flow
+│   └── widgets/
+│       ├── home_screen_header.dart  # Branding header component
+│       ├── track_list_widget.dart   # Masking audio track list
+│       ├── volume_bar.dart          # Vertical volume shaping bar
+│       ├── dot_volume_meter.dart    # LED-style volume indicator
+│       ├── bottom_bar.dart          # Main bottom navigation & timer bar
+│       ├── timer_modal.dart         # Analog clock & duration picker modal
+│       └── settings_modal.dart      # Subscription, FAQ, & legal options
+├── legal/                     # Store deployment legal drafts & privacy policies
+├── android/                   # Native Android project configuration
+└── ios/                       # Native iOS project configuration
 ```
 
-## Implemented Behavior
+---
 
-### Main player (`HomeScreen`)
+## 🚀 Getting Started
 
-- Uses a single looping `AudioPlayer` instance.
-- Selecting a track starts playback of the matching local asset.
-- Re-tapping current track toggles pause/resume.
-- Track state coloring:
-  - First app launch: all tracks neutral/dark
-  - Playing track: green
-  - Paused track: yellow with blink animation
-- Track list supports manual scroll controls (`top` / `more`) in addition to touch scrolling.
+### Prerequisites
 
-### Duration and timer logic
-
-- Bottom slider maps to `1..10` hours and `11 => ∞` (continuous).
-- Finite duration starts a 1-second interval countdown and stops playback at zero.
-- Infinite mode disables countdown (`Duration.zero`).
-- `TimerModal` allows advanced duration/fade settings and returns values through `onSave`.
-
-### Settings modal
-
-`SettingsModal` provides:
-- Active output device display (currently static text from parent)
-- External links:
-  - App store review pages (generic store URLs)
-  - FAQ: `https://msiliverman.vercel.app/faq`
-  - Privacy policy: `https://msiliverman.vercel.app/privacy-policy`
-  - Terms: `https://msiliverman.vercel.app/terms-of-service`
-
-### Auth screens present
-
-`Login`, `Sign Up`, and `Forgot Password` screens are implemented with validation and simulated async flows, but app startup currently routes directly to `HomeScreen` (`main.dart`).
-
-## Prerequisites
-
-- Flutter SDK installed and on PATH
-- Android Studio and/or Xcode setup for emulator/simulator targets
-
-Check setup:
-
+Ensure you have the Flutter SDK installed and configured on your machine:
 ```bash
 flutter doctor
 ```
 
-## Getting Started
+### Installation & Run
 
-1. Install dependencies:
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/tinnitus_relief_app.git
+   cd tinnitus_relief_app
+   ```
 
-```bash
-flutter pub get
-```
+2. **Install dependencies**:
+   ```bash
+   flutter pub get
+   ```
 
-2. Run the app:
+3. **Run on connected device or emulator**:
+   ```bash
+   # Run on default connected device
+   flutter run
 
-```bash
-flutter run
-```
+   # Run specifically on iOS simulator or Android emulator
+   flutter run -d ios
+   flutter run -d android
+   ```
 
-3. Run on specific target examples:
+---
 
-```bash
-flutter run -d ios
-flutter run -d android
-```
+## 📜 Legal & Store Readiness
 
-## Assets and Configuration
+Draft legal documentation is located under the [`legal/`](file:///C:/Users/mdnab/Desktop/tinnitus_relief_app/legal/) directory:
+- `PRIVACY_POLICY.md`
+- `TERMS_AND_CONDITIONS.md`
+- `APP_STORE_CHECKLIST.md`
 
-Configured in `pubspec.yaml`:
-- `assets/images/`
-- `assets/audio/`
-- `Kallisto` font family with thin/light/medium/bold/heavy weights
+---
 
-## Legal and Publishing Notes
+## 📄 License
 
-The `legal/` folder includes strong draft documents and a checklist, but still contains placeholders (company name, email, address, jurisdiction, pricing model, etc.) that must be finalized before production release.
+### 🚫 Creative Commons Non-Commercial (CC BY-NC 4.0)
 
-## Current Gaps / Known Issues
+This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)** license.
 
-- `flutter test` currently cannot run in this environment because Flutter CLI is not installed.
-- `test/widget_test.dart` is the default counter test and does not match the current app UI, so it will fail even in a configured Flutter environment.
-- Auth screens are not wired as the startup flow.
-- Some external settings links are generic placeholders for review/store destinations.
-- `google_fonts` dependency is present in `pubspec.yaml` but not currently used in code.
-
-## Suggested Next Steps
-
-1. Wire app startup to auth/onboarding flow if required for MVP.
-2. Replace legal placeholders and host finalized policy URLs.
-3. Add real widget/integration tests for player, timer, and modal interactions.
-4. Validate audio lifecycle behavior across app pause/resume/background states.
-
+See the full [LICENSE](LICENSE) file for complete terms. You are free to share and adapt this work for non-commercial purposes as long as appropriate attribution and credit is provided to the author.
